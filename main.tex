@@ -1,0 +1,49 @@
+\documentclass[journal=jctcce]{achemso}
+\setkeys{acs}{articletitle = true}
+\SectionNumbersOn
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+% Script font
+\usepackage{boondox-cal}
+
+%Tables
+\usepackage{hhline}
+\usepackage{multirow}
+\usepackage{array}
+
+% Lin Resp equations
+\def\bra#1{\langle#1 |}
+\def\ket#1{| #1 \rangle}
+\def\linresp#1#2{\langle\langle#1;#2\rangle\rangle}
+
+% Lists
+\usepackage{enumitem}
+
+% Graphics
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+\title{Real-Time Coupled Cluster Methods}
+\author{Zhe Wang}
+\affiliation{Department of Chemistry, Virginia Tech, Blacksburg, VA 24061, USA}
+\email{zhw0930@vt.edu}
+
+\begin{document}
+
+%\input{abstract.tex}
+
+\newpage
+\input{ch1_intro.tex}
+%\input{ch2_theory.tex}
+%\input{ch3_rtcc.tex}
+%\input{ch4_rtcc3.tex}
+%\input{ch5_conc.tex}
+%\input{extra.tex}
+
+\bibliography{refs.bib}
+\newpage
+%\input{toc}
+\end{document}
