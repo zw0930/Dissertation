@@ -1,0 +1,387 @@
+\chapter{Theoretical Background}  \label{theory} 
+\section{Approximations of the Many-Electron Wave Function}\label{approx-wfn}
+A primary goal of quantum chemists is to identify suitable approximations for the many-electron wave function under specific circumstances. As frequently observed in quantum chemical investigations, key approximations are employed to account for various factors, such as neglecting relativistic effects\cite{Pitzer1979} that become significant for systems containing very heavy atoms and applying the Born-Oppenheimer approximation\cite{Born1927} that treats the wave functions of nuclei and electrons separately due to the substantial difference in mass and velocity between nuclei and electrons. These approximations lead to the formulation of the non-relativistic time-dependent electronic Schr\"odinger equation\cite{Schrodinger1982} (TDSE) in atomic units,
+\begin{equation}
+\hat{H}\ket{\Psi(\mathbf{r}, t; \mathbf{R})} = i\frac{d}{dt}\ket{\Psi(\mathbf{r}, t; \mathbf{R})},
+\end{equation}
+where the wave function depends on electronic coordinates and time explicitly and nuclear coordinates implicitly. Furthermore, for any stationary states without the consideration of the time-dependency, we can use a simpler form, the time-independent Schr\"odinger equation (TISE), 
+\begin{equation}
+\hat{H}\ket{\Psi(\mathbf{r}; \mathbf{R})} = E\ket{\Psi(\mathbf{r}; \mathbf{R})},
+\end{equation}
+which is an eigenvalue problem where the wave function and the energy of the corresponding state is the eigenvector and eigenvalue of the Hamiltonian, respectively.  
+
+To completely describe an electron, the form of the wave function must also incorporate principles associated with spin and the Pauli exclusion principle.\cite{Pauli1925} One commonly used representation is the Slater determinant in the Hartree-Fock (HF) approximation,\cite{Slater1951, Szabo2012}
+\begin{equation}
+\Psi(\mathbf{x_{1}}, \mathbf{x_{2}}, ..., \mathbf{x_{N}})=(N!)^{-\frac{1}{2}}
+\begin{vmatrix}
+\chi_{1}(\mathbf{x_{1}}) & \chi_{2}(\mathbf{x_{1}}) & \cdots & \chi_{N}(\mathbf{x_{1}}) \\
+\chi_{1}(\mathbf{x_{2}}) & \chi_{2}(\mathbf{x_{2}}) & \cdots & \chi_{N}(\mathbf{x_{2}}) \\
+\vdots & \vdots & \ddots & \vdots \\
+\chi_{1}(\mathbf{x_{N}}) & \chi_{2}(\mathbf{x_{N}}) & \cdots & \chi_{N}(\mathbf{x_{N}})
+\end{vmatrix}, 
+\end{equation}
+where the orbital $\chi(\mathbf{x})=\phi(\mathbf{r})\alpha(\omega) \ or \ \phi(\mathbf{r})\beta(\omega)$ includes both spatial and spin coordinates.As a result, a wave function described by a single Slater determinant has $N$ electrons occupying $N$ spin orbitals and adheres to the Pauli exclusion principle/antisymmetry principle. It also accounts for the exchange correlation between two electrons with parallel spins, while the motions of electrons with opposite spins remain uncorrelated. Thus, HF methods are often referred to as ``uncorrelated" methods. Despite missing some of the exchange correlation terms, the HF approximation serves as the foundation for many other more accurate ``correlated" methods. For instance, the wave function can be represented as a combination of the HF ground state wave function $\ket{\Psi_{0}}$ and other determinants built upon $\ket{\Psi_{0}}$ as the reference state. Such methods are also known as post-HF methods.
+
+\section{Coupled Cluster Methods}\label{cc}
+Coupled cluster (CC) theory\cite{Crawford2000} is one of the post-HF methods that considers the correlated motions of any pair of electrons. Compared to HF, the correlated wave function consists not only of occupied orbitals as in the Slater determinant, but also of unoccupied/virtual orbitals that are part of the basis set but possess higher energy. By substituting occupied orbitals with virtual ones, excited/substituted determinants are constructed to enhance electron correlation. A linear combination of the HF ground state and these excited determinants is employed to provide a more accurate approximation of the wave function. In contrast to other correlated methods, CC methods use an exponential \textit{Ansatz} to specifically incorporate excited determinants:
+\begin{equation}
+\ket{\Psi_{\rm CC}} = e^{\hat{T}} \ket{0},
+\label{eq:cc-wfn}
+\end{equation}
+and TISE becomes
+\begin{equation}
+\hat{H}e^{\hat{T}} \ket{0} = E_{CC}e^{\hat{T}} \ket{0},
+\end{equation}
+where the reference state, $\ket{0}$, is often the HF ground state. The excitation operator $\hat{T}$ in Eq.~(\ref{eq:cc-wfn}) can be expanded and represented with a convenient mathematical technique, second quantization:\cite{Dirac1927}   
+\begin{equation}
+\hat{T} = \sum_{n=1}^{N}\hat{T}_{n},
+\end{equation}
+with the nth-orbital cluster operator as
+\begin{equation}
+\hat{T}_{n} = (\frac{1}{n!})^{2}\sum_{ij...ab...}t_{ij...}^{ab...}a_{a}^{+}a_{b}^{+}...a_{j}a_{i},
+\end{equation}
+where $i, j, ...$ denotes occupied orbitals, $a, b, ...$ denotes virtual orbitals, and $t_{ij...}^{ab...}$ are excitation amplitudes corresponding to the n-tuply excited determinant, $\ket{\Psi_{ij...}^{ab...}}$. $a_{p}^{+}$ and $a_{p}$ are the creator and the annihilator, respectively, for any orbital $p$ in the second quantization. An exact description of the wave function can be obtained by including all possible excited determinants. However, in practice, truncated CC methods are usually employed due to their polynomial scaling and the limitation of computational resources. For example, the coupled cluster singles and doubles (CCSD) method includes only single- and double-excitation terms with $\hat{T}=\hat{T}_{1}+\hat{T}_{2}$. Its scaling is proportional to $N^{6}$, which is the order of the most computationally expensive contraction in CCSD equations. Similarly, the gold standard in quantum chemistry, CCSD(T),\cite{Raghavachari1989} scales as $N^{7}$, while CCSDT,\cite{Noga1987} which includes all triple excitations, scales as $N^{8}$.
+
+The CC energy, $E_{CC}$, and $\hat{T}$ amplitudes can be solved by left-projecting the reference state $\ket{0}$ and the excited determinants $\ket{\Psi_{ij...}^{ab...}}$ to the Schr\"odinger equation, respectively:
+\begin{equation}
+\bra{0}e^{-\hat{T}}\hat{H}e^{\hat{T}} \ket{0} = E_{CC}\bra{0}e^{-\hat{T}}e^{\hat{T}} \ket{0} = E_{CC},
+\label{eq:cc-energy}
+\end{equation}
+\begin{equation}
+\bra{\Psi_{ij...}^{ab...}}e^{-\hat{T}}\hat{H}e^{\hat{T}} \ket{0} = E_{CC}\bra{\Psi_{ij...}^{ab...}}e^{-\hat{T}}e^{\hat{T}} \ket{0} = 0.
+\label{eq:cc-amp}
+\end{equation}
+Noting that the similarity-transformed Hamiltonian, $e^{-\hat{T}}\hat{H}e^{\hat{T}}$, has the same eigenspectrum as $\hat{H}$ and is introduced by multiplying an inverse exponential $e^{-\hat{T}}$ in the process, so that the right-hand side of Eq.~(\ref{eq:cc-amp}) does not involve $E_{CC}$, the similarity-transformed Hamiltonian is usually denoted as $\bar{H}$. It can be calculated iteratively using the amplitudes solved via Eq.~(\ref{eq:cc-amp}). $\bar{H}$ can then be inserted into Eq.~(\ref{eq:cc-energy}) to solve for the CC energy. Another advantage of introducing $\bar{H}$ is that $e^{-\hat{T}}\hat{H}e^{\hat{T}}$ can be expanded as a linear combination of nested commutators of $\hat{H}$ with $\hat{T}$ using the Campbell-Baker-Hausdorff (CBH) expansion.\cite{Achilles2012} It can be naturally truncated at quadruply nested commutators:
+\begin{equation}
+e^{-\hat{T}}\hat{H}e^{\hat{T}} = \hat{H} + [\hat{H}, \hat{T}] + \frac{1}{2!}[[\hat{H}, \hat{T}], \hat{T}] + \frac{1}{3!}[[[\hat{H}, \hat{T}], \hat{T}], \hat{T}]
++ \frac{1}{4!}[[[[\hat{H}, \hat{T}], \hat{T}], \hat{T}], \hat{T}].
+\label{eq:cc-cbh}
+\end{equation}
+In addition to simplifying the wave function mathematically, the unique exponential \textit{Ansatz} also guarantees the CC energy to be size-consistent and size-extensive,\cite{Sinanoglu1964, Cizek1966, Cizek1971, Crawford2000} with the reference wave function also being size-consistent and size-extensive. These characteristics are in demand, especially for larger molecules. Considering a system consisting of two non-interacting fragments, X and Y, $e^{\hat{T}}$ can be factorized as $e^{\hat{T}_{X}+\hat{T}_{Y}}=e^{\hat{T}_{X}}e^{\hat{T}_{Y}}$, leading to the wave function of the system as a product of the wave functions of its far-apart fragments. Thus, the corresponding CC energies have the relationship of $E_{CC}(XY) = E_{CC}(X) + E_{CC}(Y)$, which shows the size-consistency. Size-extensivity, on the other hand, is related to size-consistency but is more mathematically formal. Because $\hat{T}$ amplitudes have no dependency on the energy, as shown in Eq.~(\ref{eq:cc-amp}), the amplitudes are independent of the system size without being affected by the size-dependent energy. Also, as shown straightforwardly in the CBH expansion in Eq.~(\ref{eq:cc-cbh}), all the terms on the right-hand side have the Hamiltonian $\hat{H}$ connected to all cluster operators $\hat{T}$, regardless of whether $\hat{T}$ is truncated or not. These facts ensure that the CC energy scales linearly with the system size (the number of electrons), not only for full CC but also for truncated CC methods.
+
+Although we have seen that $\bar{H}$ is convenient for the implementation of CC methods and the demonstration of important characteristics of CC, it is no longer Hermitian. Therefore, the left-hand eigenvectors and the right-hand eigenvectors are not identical and need to be solved separately. One way to resolve this is to introduce the energy Lagrangian:\cite{Beavis1990, Koch1990} 
+\begin{equation}
+\mathcal{L}_{CC} = E_{CC} = \bra{0}\bar{H}\ket{0} + \sum_{ij...ab...}\lambda_{ab...}^{ij...}\bra{\Psi_{ij...}^{ab...}}\bar{H}\ket{0} 
+                                             = \bra{0}(1 + \hat{\Lambda})\bar{H}\ket{0},
+\label{eq:cc-lag}                                          
+\end{equation}
+where $\lambda_{ab...}^{ij...}$ are the Lagrangian multipliers, also referred to as de-excitation amplitudes in CC equations. The left- and right-hand wave functions are thereby written as
+\begin{equation}
+\bra{\tilde{\Psi}_{CC}} = \bra{0}(1 + \hat{\Lambda})e^{-\hat{T}} 
+\label{eq:cc-left-wfn}
+\end{equation}
+and
+\begin{equation}
+\ket{\Psi_{CC}} = e^{\hat{T}}\ket{0},
+\label{eq:cc-right-wfn}
+\end{equation}
+respectively. The amplitude equations are then derived through variational optimization of $\mathcal{L}_{CC}$ with
+\begin{equation}
+\frac{\partial \mathcal{L}_{CC}}{\partial \lambda_{ab...}^{ij...}} = \bra{\Psi_{ij...}^{ab...}}\bar{H}\ket{0} = 0
+\label{eq:cc-t-eqn}
+\end{equation}
+as the $\hat{T}$ equations, and 
+\begin{equation}
+\frac{\partial \mathcal{L}_{CC}}{\partial t_{ij...}^{ab...}} = \bra{0}(1 + \hat{\Lambda})[\bar{H}, \tau_{ij...}^{ab...}]\ket{0} = 0
+\label{eq:cc-l-eqn}
+\end{equation}
+as the $\hat{\Lambda}$ equations, where $\tau_{ij...}^{ab...}$ is the second-quantized excitation operator.
+
+
+Up to this point, equations for calculating CC amplitudes and the ground state energy have been presented. Other methods will be needed to obtain additional properties of interest. For instance, excited state energies can be calculated using equation-of-motion coupled cluster (EOM-CC) methods\cite{Geertsen1989, Stanton1993} by diagonalizing the similarity-transformed Hamiltonian. CC response theory\cite{Monkhorst1977, Dalgaard1983} is useful for studying frequency-dependent properties arising from the interaction between the system and external electromagnetic perturbations. Real-time coupled cluster (RT-CC) methods\cite{Schonhammer1978, Hoodbhoy1979} can also quantify properties related to the system's response to external electromagnetic fields, both within and beyond the perturbation theory framework. The following sections will discuss response theory and real-time methods in detail. 
+
+\section{Response Theory}\label{response}
+Apart from the molecular properties of the ground state, a variety of properties induced by the interaction between the system and an external electromagnetic field are also important for understanding molecular structure, electronic structure, electron dynamics, etc.\cite{English2015, Stuyver2020} The capability to calculate such properties, including spectroscopic properties, establishes a connection between theoretical studies and experimental measurements. Response theory, in particular, provides a framework to solve for the perturbation of a system by a time-dependent field as terms of a perturbative expansion with respect to the field strength.\cite{Norman2011, Helgaker2012} To derive the evolution of the wave function in the presence of a time-dependent field, we express the Hamiltonian as a sum of two terms with different perturbative orders: one being the zeroth-order time-independent term and the other being the first-order time-dependent term representing the field:
+\begin{equation}
+\hat{H}(t) = \hat{H}^{(0)} +  \hat{H}^{(1)}(t) = \hat{H}_{0} + \hat{V}^{t},
+\label{eq:response-h}
+\end{equation}
+where
+\begin{equation}
+\hat{V}^{t} = \int_{-\infty}^{\infty} d\omega \, \hat{V}^{\omega}e^{-i\omega t},
+\label{eq:response-V}
+\end{equation}
+obtained from the Fourier transform\cite{Bracewell1989} with $\omega$ being the frequency of the external field. And
+\begin{equation}
+\hat{V}^{\omega} = \epsilon_{\omega}\hat{\Omega},
+\end{equation}
+where $\epsilon_{\omega}$ represents the amplitude of the field, and $\hat{\Omega}$ represents the field operator. We can then expand the wave function and the expectation value of a general operator in orders of the perturbation as follows: 
+\begin{equation}
+\ket{\Psi(t)} = \ket{\Psi}^{(0)} +  \ket{\Psi(t)}^{(1)} +  \ket{\Psi(t)}^{(2)} + ...,
+\end{equation}
+where 
+\begin{equation}
+\ket{\Psi}^{(1)} = \int_{-\infty}^{\infty} d\omega \,  \ket{\Psi(\omega)}^{(1)}e^{-i\omega t}
+\end{equation}
+and
+\begin{equation}
+\ket{\Psi}^{(2)}  = \int_{-\infty}^{\infty} d\omega_{1} \int_{-\infty}^{\infty} d\omega_{2} \, 
+                            \ket{\Psi(\omega_{1}, \omega_{2})}^{(2)}e^{-i\omega_{1} t}e^{-i\omega_{2} t}.
+\end{equation}
+Similarly, the expansion of the expectation value of an operator $\hat{A}$ can be written as
+\begin{equation}
+\langle \hat{A}\rangle(t) = \langle \hat{A}\rangle_{0} + 
+                                     \int_{-\infty}^{\infty} d\omega \,  \langle\langle \hat{A};\hat{V}^{\omega}\rangle\rangle_{\omega} e^{-i\omega t} + 
+                                     \int_{-\infty}^{\infty} d\omega_{1} \int_{-\infty}^{\infty} d\omega_{2} \, 
+                                     \langle\langle \hat{A};\hat{V}^{\omega_{1}}, \hat{V}^{\omega_{2}} \rangle\rangle_{\omega_{1}, \omega_{2}} e^{-i\omega_{1} t}e^{-i\omega_{2} t} + ...,
+\label{eq:response-exp-val}                                   
+\end{equation}
+from which the response functions are defined. $\langle\langle \hat{A};\hat{V}^{\omega}\rangle\rangle$ is the linear response function corresponding to the first-order perturbation due to the applied field and $\langle\langle \hat{A};\hat{V}^{\omega_{1}}, \hat{V}^{\omega_{2}} \rangle\rangle$  is the quadratic response function corresponding to the second-order perturbation. By definition, molecular response properties can be calculated using response functions at various perturbative orders. For example, in the presence of an external electric field, frequency-dependent polarizabilities are associated with the linear response function, while frequency-dependent hyperpolarizabilities are related to the quadratic response function. Additionally, transition matrix elements between the reference state and an excited state can be computed using the residue of the response function when the frequency of the field matches the energy difference between the two states. A wide range of molecular properties can be obtained by selecting different operators of interest and various types of external fields, such as electric or magnetic fields.\cite{Helgaker2012, Mukherjee1979, Olsen1985, Luo1995, Autschbach2002, Crawford2006, Bast2011}
+
+To derive the response functions, one popular way is to utilize the time-dependent quasi-energy.\cite{Christiansen1998} Considering the exact states to start with, the wave function can be separated into a regular wave function $\ket{\tilde{\Psi}}$ and a time-dependent phase factor $F(t)$ with real values:
+\begin{equation}
+\ket{\Psi} = \ket{\tilde{\Psi}}e^{-iF(t)}.
+\end{equation}
+Inserting this form of the wave function into TDSE and then left-projecting the Schr\"odinger equation with $\ket{\tilde{\Psi}}$, we arrive at the equations for $F(t)$:
+\begin{equation}
+(\hat{H} - i\frac{d}{dt} - \frac{dF(t)}{dt} )\ket{\tilde{\Psi}} = 0.
+\label{eq:response-quasi-SE}
+\end{equation}
+We define the time derivative of the phase factor as
+\begin{equation}
+Q(t) = \frac{dF(t)}{dt} = \bra{\tilde{\Psi}}\hat{H}-i\frac{d}{dt}\ket{\tilde{\Psi}},
+\label{eq:response-quasi}
+\end{equation}
+where $Q(t)$ is the so-called quasi-energy. Noted that the quasi-energy becomes the ground state energy when the Hamiltonian is time-independent when $\hat{V}^{t} = 0$. 
+
+With the form of $\hat{V}^{t}$ shown in Eq.~(\ref{eq:response-V}), a time-averaged quasi-energy\cite{Christiansen1998} over a period of the field $T=\frac{2\pi}{\omega}$ is essential to the response theory, which can be shown in Eq.~(\ref{eq:response-Q}):
+\begin{equation}
+\mathcal{Q} = \{Q\}_{T} = \{\bra{\tilde{\Psi}}\hat{H}-i\frac{d}{dt}\ket{\tilde{\Psi}}\}_{T},
+\label{eq:response-Q}
+\end{equation}
+where the time-average is calculated as
+\begin{equation}
+\{Q\}_{T} = \frac{1}{T}\int_{0}^{1}Q(t)dt.
+\end{equation}
+It is also worth mentioning that $\mathcal{Q}$ does not depend on the form of $\ket{\tilde{\Psi}}$. Changing $\ket{\tilde{\Psi}}$ will not lead to any differences, which means that the derivation presented here for the exact states also applies to the approximate wave functions that will be discussed later on.
+
+In analogous to the regular energy, the variational principle\cite{Ekeland1974} and the generalized Hellmann-Feynman theorem\cite{Hayes1965} of the quasi-energy are examined. By projecting an arbitrary variation of the regular wave function on Eq.~(\ref{eq:response-quasi-SE}): 
+\begin{equation}
+\bra{\delta\tilde{\Psi}} \hat{H} - i\frac{d}{dt} - Q(t) \ket{\tilde{\Psi}} = 0, 
+\label{eq:response-variation}
+\end{equation}
+and taking a time-average of Eq.~(\ref{eq:response-variation}), the variational principle of the time-averaged quasi-energy can be derived as 
+\begin{equation}
+\delta\mathcal{Q} = 0.
+\end{equation}
+By taking the derivative of $\mathcal{Q}$ with respect to the amplitude of the field $\epsilon^{\omega}$, the Hellmann-Feynman theorem can be obtained as
+\begin{equation}
+\frac{d\mathcal{	Q}}{d\epsilon^{\omega}}=\{\bra{\tilde{\Psi}}\frac{d\hat{H}}{d\epsilon^{\omega}}\ket{\tilde{\Psi}}\}_{T}.
+\end{equation}
+
+Following the same procedure, we can also choose a different starting point rather than the one shown in Eq.~(\ref{eq:response-quasi}). The intermediate normalization together with the Lagrangian can be introduced to the derivation. The quasi-energy and the complex and real quasi-energy Lagrangian and the time-averaged Lagrangian in this formulation are derived and shown as
+\begin{equation}
+Q(t)  = Re(\bra{\Psi_{0}}\hat{H}\ket{\hat{\Psi}}),
+\label{eq:response-lag-Q}
+\end{equation}
+\begin{equation}
+L^{C}(t)  = \bra{\Psi_{0}}\hat{H}\ket{\hat{\Psi}} + \bra{\bar{\Psi}}\hat{H} - i\frac{d}{dt}\ket{\hat{\Psi}},
+\label{eq:response-lag-Lc}
+\end{equation}
+\begin{equation}
+L(t)  = Re(\bra{\Psi_{0}}\hat{H}\ket{\hat{\Psi}} + \bra{\bar{\Psi}}\hat{H} - i\frac{d}{dt}\ket{\hat{\Psi}}),
+\label{eq:response-lag-L}
+\end{equation}
+and
+\begin{equation}
+\mathcal{L}  = Re(\{\bra{\Psi_{0}}\hat{H}\ket{\hat{\Psi}}\}_{T} + \{\bra{\bar{\Psi}}\hat{H} - i\frac{d}{dt}\ket{\hat{\Psi}}\}_{T}),
+\label{eq:response-lag-avg-L}
+\end{equation}
+respectively, where $Q(t)$ remains real, and $L(t)$ is the real part of the complex $L^{C}(t)$. In Eqs.~(\ref{eq:response-lag-Q}) to~(\ref{eq:response-lag-avg-L}), the intermediate normalization $\bra{\Psi_{0}}\hat{\Psi}\rangle=1$ between a reference state $\ket{\Psi_{0}}$ and a normalized state $\ket{\hat{\Psi}}$ can be expanded in an orthonormal basis involving $\ket{\Psi_{0}}$ as
+\begin{equation}
+\ket{\hat{\Psi}} = \ket{\Psi_{0}} + \sum_{n}c_{n}\ket{\textbf{n}},
+\label{eq:response-c}
+\end{equation}
+where $\bra{\bar{\Psi}}$ is defined as 
+\begin{equation}
+\bra{\bar{\Psi}}=\sum_{n}\bar{c}_{n}\bra{\hat{\textbf{n}}},
+\label{eq:response-cbar}
+\end{equation}
+so that $\bra{\hat{\textbf{n}}}\hat{\Psi}\rangle=0$. The stationary condition of the quasi-energy Lagrangian is then obtained as
+\begin{equation}
+\bra{\hat{\textbf{n}}}\hat{H}-i\frac{d}{dt}\ket{\hat{\Psi}}=0,
+\end{equation}
+with $\bar{c}_{n}$ being the Lagrangian multipliers, giving us 
+\begin{equation}
+\bra{\bar{\Psi}}\hat{H} - i\frac{d}{dt}\ket{\hat{\Psi}} = \sum_{n}\bar{c_{n}}\bra{\hat{\textbf{n}}}\hat{H}-i\frac{d}{dt}\ket{\hat{\Psi}},
+\end{equation}
+as seen in the second term of Eq.~(\ref{eq:response-lag-Lc}).
+
+The variational principle and the Hellmann-Feynman theorem are thereby become
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial c_{n}} = \frac{\partial \mathcal{L}}{\partial \bar{c}_{n}} = 0
+\end{equation}
+and
+\begin{equation}
+\frac{d\mathcal{	L}}{d\epsilon^{\omega}}=Re(\{\bra{\Psi_{0}}\frac{d\hat{H}}{d\epsilon^{\omega}}\ket{\hat{\Psi}}\}_{T} + \{\bra{\bar{\Psi}}\frac{d\hat{H}}{d\epsilon^{\omega}}\ket{\hat{\Psi}}\}_{T}).
+\end{equation}
+It is worth mentioning that this formulation is not exclusive but particularly convenient for deriving coupled cluster response functions, using a similar approach as demonstrated in Eq.~(\ref{eq:cc-lag}) for CC and the quasi-energy Lagrangian in Eqs.~(\ref{eq:response-lag-Lc}) and~(\ref{eq:response-lag-L}) for response theory. Equations can be obtained by directly replacing the exact wave functions and coefficients with the corresponding CC wave functions and amplitudes in the derivation of CC response functions.
+
+The time-averaged quasi-energy is well-defined, and can be expanded as
+\begin{equation}
+\mathcal{Q} = \mathcal{Q}^{(0)} + \mathcal{Q}^{(1)} +  \mathcal{Q}^{(2)} + ...
+\end{equation}
+We can now return to the response functions introduced in Eq.~(\ref{eq:response-exp-val}). By substituting the time-averaged expectation value of an operator $\hat{V}^{\omega_{0}}e^{-i\omega_{0}t}$ for $\hat{A}$ in the form presented in Eq.~(\ref{eq:response-exp-val}) and utilizing the Hellmann-Feynman theorem for the time-averaged quasi-energy, the response functions can be shown to be derivatives of the time-averaged quasi-energy with respect to the amplitude of the field. For instance, the linear and quadratic response functions are as follows:
+\begin{equation}
+\langle\langle\hat{V}^{\omega_{0}};\hat{V}^{\omega_{1}}\rangle\rangle_{\omega_{1}} = \frac{d^{2}\mathcal{Q}}{d\epsilon^{\omega_{0}}d\epsilon^{\omega_{1}}} 
+= 2! \mathcal{Q}_{\omega_{0}, \omega_{1}}^{(2)},
+\label{eq:response-lr}
+\end{equation}
+\begin{equation}
+\langle\langle\hat{V}^{\omega_{0}};\hat{V}^{\omega_{1}}, \hat{V}^{\omega_{2}}\rangle\rangle_{\omega_{1}, \omega_{2}} = \frac{d^{3}\mathcal{Q}}{d\epsilon^{\omega_{0}}d\epsilon^{\omega_{1}}d\epsilon^{\omega_{2}}}
+= 3! \mathcal{Q}_{\omega_{0}, \omega_{1}, \omega_{2}}^{(3)},
+\end{equation}
+where their relationships with the corresponding second- and third-order time-averaged quasi-energies are also highlighted to derive the explicit expressions of the response functions. To illustrate, let's consider the linear response function: by explicitly expressing the second-order quasi-energy using the perturbative expansion of a general reference state, Eq.~(\ref{eq:response-lr}) can be reformulated as
+\begin{equation}
+\langle\langle \hat{A};\hat{B}\rangle\rangle_{\omega_{B}} = 2!P_{\hat{A},\hat{B}}\sum_{n}\frac{\bra{\Psi_{0}}\hat{A}\ket{\textbf{n}}\bra{\textbf{n}}\hat{B}\ket{\Psi_{0}}}{\omega_{B}-\omega_{n}},
+\end{equation}
+where $\hat{A}$ and $\hat{B}$ are in the simplified form of any frequency-dependent operators, and $P_{\hat{A},\hat{B}}$ is the permutation operator that exchanges $\hat{A}$ and $\hat{B}$. 
+
+To derive CC response functions, the quasi-energy Lagrangian, as mentioned above, is compatible with coupled cluster theory and will be employed in this context. Eqs.~(\ref{eq:response-lag-Q}) to~(\ref{eq:response-lag-avg-L}) can be written in the coupled cluster framework as
+\begin{equation}
+Q_{CC}(t) = Re(\bra{\Psi_{0}}\hat{H}e^{\hat{T}(t)}\ket{\Psi_{0}}),
+\end{equation}
+\begin{equation}
+L^{C}_{CC}(t) = \bra{\Psi_{0}}\hat{H}e^{\hat{T}(t)}\ket{\Psi_{0}} + 
+\sum_{\mu}\lambda_{\mu}\bra{\Psi_{\mu}}(\hat{H}-i\frac{d}{dt})e^{\hat{T}}\ket{\Psi_{0}},
+\end{equation}
+\begin{equation}
+L_{CC}(t) = Re(\bra{\Psi_{0}}\hat{H}e^{\hat{T}(t)}\ket{\Psi_{0}} + 
+\sum_{\mu}\lambda_{\mu}\bra{\Psi_{\mu}}(\hat{H}-i\frac{d}{dt})e^{\hat{T}}\ket{\Psi_{0}}),
+\end{equation}
+and
+\begin{equation}
+\mathcal{L}_{CC} = Re(\{ \bra{\Psi_{0}}\hat{H}e^{\hat{T}(t)}\ket{\Psi_{0}} + 
+\sum_{\mu}\lambda_{\mu}\bra{\Psi_{\mu}}(\hat{H}-i\frac{d}{dt})e^{\hat{T}}\ket{\Psi_{0}}\}_{T}),
+\end{equation}
+with the replacement of $\ket{\hat{\Psi}}$ with $e^{\hat{T}}\ket{\Psi_{0}}$ and $\bra{\bar{\Psi}}$ with $\sum_{\mu}\lambda_{\mu}\bra{\Psi_{\mu}}$ where $\mu$ represents the substituted wave function $\ket{\Psi_{ijk...}^{abc...}}$ orthogonal to the reference state, the coefficients $c_{n}$ in Eq.~(\ref{eq:response-c}) are equivalent to $\hat{T}$ amplitudes, and the Lagrangian multiplier $\bar{c}_{n}$ in Eq.~(\ref{eq:response-cbar}) is equivalent to $\hat{\Lambda}$ amplitudes. The HF wave function $\ket{\Psi_{0}}$ is chosen as the reference state. Furthermore, coupled cluster amplitudes are expanded in orders of the perturbation here to calculate the zeroth-order, first-order, etc. quasi-energy Lagrangian, which are shown as 
+\begin{equation}
+\hat{T}(t) = \hat{T}^{(0)} + \hat{T}^{(1)}(t) + \hat{T}^{(2)}(t) + ...
+\end{equation}
+and
+\begin{equation}
+\hat{\Lambda}(t) = \hat{\Lambda}^{(0)} + \hat{\Lambda}^{(1)}(t) + \hat{\Lambda}^{(2)}(t) + ...,
+\end{equation}
+where the zeroth-order amplitudes are the time-independent ground state coupled cluster amplitudes. Different orders of amplitudes are required to calculate a specific order of the Lagrangian according to the $2n+1$ and $2n+2$ rules.\cite{Kvasnivcka1980, Shavitt2009} For the linear response function, the second-order quasi-energy Lagrangian requires first-order $\hat{T}$ amplitudes and zeroth-order Lagrangian multipliers, the $\hat{\Lambda}$ amplitudes. Additionally, as shown in Eq.~(\ref{eq:cc-cbh}) in the previous section, the CBH expansion can be conveniently inserted into the expressions above. It's also noted that, with our definition of the left-hand wave function in Eq.~(\ref{eq:cc-left-wfn}), the overlap between the left- and right-hand wave functions is 1, instead of $\bra{\hat{\textbf{n}}}\hat{\Psi}\rangle=0$ when $\bar{c_{n}}$ is defined in Eq.~(\ref{eq:response-cbar}). With all these factors considered, the coupled cluster linear response function takes the form of
+\begin{equation}
+\langle\langle \hat{A}; \hat{B}\rangle\rangle_{\omega} = 
+\frac{1}{2}\hat{C}^{\pm}[\bra{\Psi_{0}}\hat{\Lambda}[\bar{A},\hat{X}_{\hat{B}}^{\omega}]\ket{\Psi_{0}} +
+\bra{\Psi_{0}}[\hat{Y}_{\hat{B}}^{\omega},\bar{A}]\ket{\Psi_{0}}],
+\label{eq:response-final}
+\end{equation}
+where $\hat{C}^{\pm}$ acts as $\hat{C}^{\pm}\hat{V}^{\omega}=\hat{V}^{+\omega}+(\hat{V}^{-\omega})^{*}$ for a general operator $\hat{V}^{\omega}$, and $\bar{A}$ represents the similarity-transformed $\hat{A}$. We also differentiate the excitation operators with different perturbative orders, having $\hat{\Lambda}$ as $\hat{\Lambda}^{(0)}$ and $\hat{X}$, $\hat{Y}$ as perturbed $\hat{T}^{(1)}$ and $\hat{\Lambda}^{(1)}$ operators. It's noteworthy that the second term in Eq.~(\ref{eq:response-final}) can be expressed as a quadratic function of $\hat{T}^{(1)}$ without calculating $\hat{\Lambda}^{(1)}$, which takes advantage of the $2n+2$ rule mentioned earlier. Further details can be found in Ref.~\citenum{Crawford2019}.
+
+Response theory provides theorists with a powerful tool to calculate properties that can be compared to quantities measured in experiments. For example, by utilizing the expression shown in Eq.~(\ref{eq:response-final}), we can derive polarizabilities and the G' tensor, which is associated with optical rotation, using linear response functions of the electric dipole moments perturbed by an external electric or magnetic field\cite{Crawford2006} as follows:
+\begin{equation}
+\alpha(\omega) = -\langle\langle\ \hat{\mu};\hat{\mu}\rangle\rangle_{\omega},
+\end{equation}
+\begin{equation}
+G'(\omega) = Im\langle\langle\ \hat{\mu};\hat{m}\rangle\rangle_{\omega}.
+\end{equation}
+
+\section{Real-Time Methods}\label{rt}
+In section~\ref{response}, response theory is demonstrated and highlighted for its convenience in calculating properties that arise from the response of the system of interest to an external electromagnetic field. While it has been a conventional method for addressing such problems for decades, it also exhibits limitations inherent to its nature. As depicted in Eq.~(\ref{eq:response-h}), the external field is treated as a first-order perturbation to the ground state. Consequently, if the field's strength surpasses the realm of perturbation, response theory becomes less suitable. Additionally, the frequency-dependent response function necessitates computation at one selected frequency at a time. Therefore, calculating properties like broad band spectra might become expensive due to the involvement of numerous frequencies. Furthermore, there is no specific expression that corresponds to the form of the field, such as its duration, intensity, and shape, in response functions. As a result, the field cannot be tuned for different molecules or properties as required in experimental settings. Given these reasons, an alternative approach is needed.
+
+Real-time methods, in comparison to response theory, also rely on the time-dependent Schr\"odinger equation but involve explicit time-domain propagation of the wave function rather than direct computation of frequency-dependent properties.\cite{Goings2018, Li2020} In the case of exact states, the ordinary differential equation (ODE) that needs to be solved is the Schr\"odinger equation, which describes the time evolution of the wave function:
+\begin{equation}
+\hat{H}\ket{\Psi} = i\frac{d}{dt}\ket{\Psi},
+\end{equation}
+where the initial wave function $\ket{\Psi}$ at $t=0$ equals to the ground state, and $\ket{\Psi}$ perturbed by a field during the propagation can be viewed as a superposition of excited states whereas not any specific excited state. 
+
+For approximate states, density functional theory (DFT) and wave function-based methods such as HF,\cite{Beck2000, Li2005, Kvaal2011} CI,\cite{Klamroth2003, Krause2005, Krause2007} CC,\cite{Kvaal2012, Nascimento2016, Nascimento2017, Pedersen2019, Kristiansen2020, Ofstad2023, Hauge2023, Park2019, Park2021} etc., can be incorporated within the same time-dependent formalism as the TDSE. In this context, we focus on RT-CC methods in comparison to LR-CC, as discussed in section~\ref{response}. By starting from the TDSE with CC wave functions as shown in Eqs.~(\ref{eq:cc-left-wfn}) and~(\ref{eq:cc-right-wfn}), we derive a set of ordinary differential equations (ODEs) that describe the time-dependent $\hat{T}$ and $\hat{\Lambda}$ amplitudes, capturing the evolving left- and right-hand wave functions over time:
+\begin{equation}
+\bra{0}(1 + \hat{\Lambda}(t))e^{-\hat{T}(t)}\hat{H}(t) = -i\frac{d}{dt}\bra{0}(1 + \hat{\Lambda}(t))e^{-\hat{T}(t)},
+\label{eq:rt-left-wfn}
+\end{equation}
+\begin{equation}
+\hat{H}(t)e^{\hat{T}(t)}\ket{0}=i\frac{d}{dt}e^{\hat{T}(t)}\ket{0}.
+\label{eq:rt-right-wfn}
+\end{equation}
+The time-dependent Hamiltonian is usually expressed by a ``semi-classical dipole approximation":
+\begin{equation}
+\hat{H}(t) = \hat{H}_{0} + \hat{V}(t) = \hat{H}_{0} - \hat{\mu} \cdot \textbf{E}(t).
+\end{equation}
+In the equation, $\hat{\mu}$ represents, the molecular electric dipole operator that is calculated as $\hat{\mu}=\sum_{\alpha}\hat{\mu}_{\alpha}$, where $\alpha=x, y, z$ in the Cartesian coordinate system. It can also be replaced by the molecular magnetic dipole operator $\hat{m}$ when calculating properties related to the induced magnetic dipole. The time-dependence of the Hamiltonian, arising from the interaction with an external field, is present in the potential operator $\hat{V}(t)$ and the vector $\textbf{E}(t)$ that represents the external field. This allows us to choose different forms of the field. For example, if $\textbf{E}(t)$ is defined as
+\begin{equation}
+\textbf{E}(t) = A_{0}\textbf{F}(t)cos[\omega(t-t_{0})]
+\end{equation}
+and
+\begin{equation}
+\textbf{F}(t) = \textbf{F}sin^{2}[\frac{\pi(t-t_{0})}{t_{d}}]\theta[t_{d} - (t - t_{0})], 
+\end{equation}
+where the external field has a maximum intensity/amplitude of $A_{0}$ and a carrier frequency of $\omega$. The form of the field, denoted as $\textbf{F}(t)$, exhibits a sinusoidal envelope that persists from the starting time $t_{0}$ to the duration of the field $t_{d}$, regulated by the Heaviside step function $\theta(t)$ which takes on the value of 1 when $t \ge 0$ and 0 otherwise. The selected field form can be as straightforward as a Dirac delta function\cite{Dirac1927function, Morse1951} or a Gaussian pulse, a sinusoidal field, and so on, each with different parameters such as intensity and duration, as depicted in the above equations. This flexibility allows us to adjust the field to match the properties of interest and the stability of the simulation, thus emulating the laser pulses utilized in experiments.
+
+To derive the working equations from Eqs.~(\ref{eq:rt-left-wfn}) and~(\ref{eq:rt-right-wfn}), an explicit time differentiation of the amplitudes is conducted as follows: 
+\begin{equation}
+\bra{\mu}\bar{H}\ket{0}=i\frac{dt_{\mu}}{dt},
+\label{eq:rt-t-eqn}
+\end{equation}
+\begin{equation}
+\bra{0}(1 + \hat{\Lambda})[\bar{H}, \tau_{\mu}]\ket{0} = -i\frac{d\lambda_{\mu}}{dt},
+\label{eq:rt-l-eqn}
+\end{equation}
+where $\mu$ denotes the substituted determinants and $\tau$ represents the excitation operator.Comparing these two equations with Eqs.~(\ref{eq:cc-t-eqn}) and~(\ref{eq:cc-l-eqn}), it becomes evident that the left-hand sides correspond to residuals in the ground state $\hat{T}$ and $\hat{\Lambda}$ equations. The same procedures and expressions applicable to CC equations of the ground state can be used, simplifying the implementation of RT-CC methods compared to the derivation required for the response functions. Eqs.~(\ref{eq:rt-t-eqn}) and~(\ref{eq:rt-l-eqn}) are subsequently utilized for the ensuing numerical propagation. They can be expressed in a general form as a set of ordinary differential equations (ODEs) given by 
+\begin{equation}
+\begin{cases}
+\frac{dy_{1}}{dx}=f_{1}(x, y_{1} , y_{2})\\
+\frac{dy_{2}}{dx}=f_{2}(x, y_{1} , y_{2})
+\end{cases},
+\end{equation}
+with $y_{1}$ and $y_{2}$ being $\hat{T}$ and $\hat{\Lambda}$ amplitudes, and $x$ being time. Integrators developed in mathematics are also compatible with RT equations. In Chapter 3, a detailed discussion on various types of integration techniques and the configuration of their parameters will be provided.
+
+Properties, such as the energy and dipole moments, can be calculated as the expectation values of the CC wave functions with known amplitudes: 
+\begin{equation}
+\langle \hat{A}(t) \rangle = \frac{\bra{\tilde{\Psi}_{CC}(t)}\hat{A}\ket{\Psi_{CC}(t)}}{\bra{\tilde{\Psi}_{CC}(t)} \Psi_{CC}(t) \rangle}.
+\end{equation}
+For instance, the time-dependent electric dipole moments are calculated with $\hat{A}$ being the electric dipole operator, $\hat{\mu}$. The corresponding frequency-dependent properties can be obtained via Fourier transform in a wide range of frequencies at one time. 
+
+We have now established a general RT-CC framework for implementation. In applications, the level of theory, the form of the field, the numerical integrator, etc., all need to be carefully selected based on the properties of interest, the required accuracy, and the available computational resources. The following are example steps for calculating an electronic absorption spectrum using RT-CCSD:
+
+1. Running ground state calculations for the initial values of $\hat{T}_{1}$, $\hat{T}_{2}$, $\hat{\Lambda}_{1}$and $\hat{\Lambda}_{2}$ amplitudes. 
+
+2. Calculating the external electric field at the first time step $t_{1}$, and inserting the value into the time-dependent Hamiltonian.
+
+3. Solving the differential equations for the amplitudes at $t_{1}$. 
+ 
+4. Calculating electric dipole moments at $t_{1}$.
+
+5. Repeating step 2 to 4 for every time step for the rest of the propagation.
+
+5. Calculating the absorption spectrum by performing a Fourier transform of the time-dependent dipole moments. \\
+Among the steps outlined above, step 3 is the most computationally demanding in RT calculations, as it involves the calculation of the residuals in the amplitude equations. Each calculation for a set of amplitudes with a certain value of $t$ carries the same computational cost as one ground state calculation. For the simplest Euler's method,\cite{Atkinson1991} one step from $t_{i}$ to $t_{i+1}$ entails:
+\begin{equation}
+y_{i+1} = y_{i} + hf(x_{i}, y_{i}),
+\end{equation}
+where $h$ is the step size for solving an ODE: 
+\begin{equation}
+\frac{dy}{dx}=f(x, y).
+\end{equation}
+If this method is employed for the RT-CCSD calculation, the computational cost of a propagation with $n$ time steps will be $n$ times that of a CCSD ground state calculation. In practice, a higher-order integrator is often necessary for both accuracy and numerical stability.\cite{Pedersen2019} The computational cost will increase with the number of calculations of residuals. Efforts are needed to reduce the cost of both explicit time propagation and CC methods with polynomial scaling, which serves as the motivation for the work presented in the next two chapters.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             

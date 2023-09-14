@@ -1,0 +1,47 @@
+\section{Computational Details} \label{comp}
+
+To test the performance of RT-CC methods, absorption spectra were calculated
+from fast Fourier transform (FFT) of time-dependent induced dipole moments for
+comparison with EOM-CC excitation frequencies and dipole strengths.  
+We take the applied external electric field to be a Gaussian envelope,
+\begin{equation}\label{eq:field}
+\vec{E}(t) = - {\cal E}
+e^{-\frac{1}{2}\frac{(t-\nu)^2}{\sigma^{2}}} \cos{\omega(t-\nu)} \vec{n},
+\end{equation}
+where the intensity ${\cal E}$, center position $\nu$ and standard
+deviation $\sigma$ of the Gaussian pulse may vary for different
+applications.  In addition, we take the field to be isotropic, \textit{i.e.},
+\begin{equation}\label{eq:iso-field}
+\vec{n} = \frac{1}{\sqrt{3}}(\hat{i} + \hat{j} + \hat{k}).
+\end{equation}
+
+All calculations were carried out using the PyCC\cite{pycc} Python-based coupled
+cluster package developed in the Crawford group, which makes use of the
+NumPy\cite{Harris2020} and {\tt opt\_einsum}\cite{Smith2018} packages.
+PyCC provides a variety of coupled cluster methods, including CCD, CC2, CCSD,
+and CCSD(T), as well as local-correlation and real-time simulations, and it
+takes advantage of the ability of Python and NumPy to cast between data types
+(including complex representations) automatically.  PyCC utilizes the Psi4
+package\cite{Smith2020} to provide the requisite one- and two-electron integrals,
+as well as the SCF molecular orbitals.  For the single-precision calculations, the raw, 
+double-precision, MO-basis electron repulsion integrals from Psi4 are cast into single 
+precision with negligible computational cost as compared to subsequent RT-CC steps.  
+These integrals are stored as four-index NumPy arrays for later contractions and automatically 
+cast to single-precision complex type upon real-time propagation. Each CPU calculation was run on a single
+node with Intel's Broadwell processors, 2 x E5-2683v4 2.1GHz.  Taking advantage
+of the similarity to the NumPy syntax, our GPU implementation was coded with
+PyTorch 1.8.0\cite{Paszke2019} by straightforwardly substituting NumPy
+functions and arrays with the corresponding PyTorch functions and tensors.  Each
+GPU calculation was run on a single node with an NVIDIA P100 GPU.
+
+Our principal test case for both the single-precision calculations and the tests
+of integrators is the series of water clusters, (H$_2$O)$_n$ up to $n=4$, using
+the coordinates provided by Pokhilko \textit{et al.}\cite{Pokhilko2018} All the
+calculations were carried out at the coupled cluster singles and doubles level
+(CCSD) with the correlation-consistent double-zeta (cc-pVDZ) basis
+set.\cite{Dunning1989}  All calculations kept the $1s$ core orbitals on the oxygen
+atoms frozen.  For comparison to conventional linear response results, we also
+carried out EOM-CCSD/cc-pVDZ excitation-energy calculations, which are included
+as stick spectra.  These results were obtained using the Psi4 code\cite{Smith2020}
+with the same frozen-core approximation.
+

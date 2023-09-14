@@ -1,49 +1,301 @@
-\documentclass[journal=jctcce]{achemso}
-\setkeys{acs}{articletitle = true}
-\SectionNumbersOn
-\usepackage{amsmath}
-\usepackage{xcolor}
+% This template is designed to operate with XeLaTeX.
+%
+% All elements in the Title, Abstract, and Keywords MUST be formatted as text and NOT as math.
+%
+%Further instructions for using this template are embedded in the document. Additionally, there are comments at the end of the file that give suggestions on writing your thesis.  
+%
+%In addition to the standard formatting options, the following options are defined for the VTthesis class: proposal, prelim, doublespace, draft. 
 
+\documentclass[doublespace, nopageskip]{VTthesis} % nopageskip - Removes arbitrary blank pages.
+
+% Using the following header instead will create a draft copy of your thesis
+%\documentclass[doublespace,draft]{VTthesis}
+
+% The lipsum package is just included to put dummy text in the document in order to demonstrate page headers and table of contents behavior. You should remove it once you begin writing your actual thesis or dissertation.
+%\usepackage{lipsum}
+
+% For the format of citations
+\usepackage[sort&compress,numbers,super]{natbib}
+
+%% Added by ZheWang-08/22/2023
+%\RequirePackage[utf8]{inputenc}
+\RequirePackage{chemformula}
 % Script font
-\usepackage{boondox-cal}
-
+%\usepackage{boondox-cal}
 %Tables
 \usepackage{hhline}
 \usepackage{multirow}
 \usepackage{array}
-
-% Lin Resp equations
-\def\bra#1{\langle#1 |}
+% Equations
+\def\bra#1{\langle#1 |}  
 \def\ket#1{| #1 \rangle}
 \def\linresp#1#2{\langle\langle#1;#2\rangle\rangle}
-
-% Lists
-\usepackage{enumitem}
-
 % Graphics
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{graphicx}
 \usepackage{wrapfig}
+%% End added by ZheWang
 
-\title{Real-Time Coupled Cluster Methods}
+
+% Title of your thesis
+\title{Investigation of Real-Time Coupled Cluster Methods for the Efficient Calculation of Optical Molecular Properties in the Time Domain}
+
+% You should include 3-5 keywords, separated by commas
+\keywords{Electronic structure theory, coupled cluster, numerical integration, GPUs, optical properties}
+
+% Your name, including middle initial(s)
 \author{Zhe Wang}
-\affiliation{Department of Chemistry, Virginia Tech, Blacksburg, VA 24061, USA}
-\email{zhw0930@vt.edu}
+
+% Change this to your program, e.g. Physics, Civil Engineering, etc.
+\program{Chemistry} 
+
+% Change this to your degree, e.g. Master of Science, Master of Art, etc.
+\degree{Doctor of Philosophy} 
+
+% This should be your defense date:
+\submitdate{September 21, 2023} 
+
+% Committee members. Only have five readers and one chair available.
+% Only use the ones you need and don't include the ones you don't need.
+% You can also declare a Co-advisor. If you do, the principal and co-advisors
+% will be listed as co-advisors on the title page.  Per the VT ETD standards, 
+% you should not include titles or educational qualifications such as PhD or Dr.
+% You should, however, include middle initials if possible.
+\principaladvisor{Daniel Crawford}
+\firstreader{Edward Valeev}
+\secondreader{Diego Troya}
+\thirdreader{Nicholas Mayhall}
+%\fourthreader{Fourth Committee Member}
+%\fifthreader{Fifth Committee Member}
+
+% The dedication and acknowledgement pages are optional. Comment them out to remove them.
+%\dedication{TODO}
+\acknowledge{
+    I would like to express my gratitude to the following individuals for guiding, supporting, and encouraging me throughout my academic journey:
+    \begin{itemize}
+        \item My parents, for their unconditional love, support, and for being my best friends.
+        \item Mark, for brightening up my day, supporting me, and going on adventures with me.
+        \item Hanlin, Lei and Xinyi, for the encouragement and inspiration. I'm lucky to be friends with you.   
+        \item Dr. Yang, for paying attention to my progress and always encouraging me to pursue my goals.
+        \item Dr. Wu, for introducing me to the world of computational chemistry.
+        \item Dr. Jaeger, for guiding me to become a scientist.
+        \item Former and current members of the Crawford group: Roberto, Alex, Monika, Ashutosh, AJ, Kirk, Ben, Ruhee, Susana, Jose, Brendan, Josh, Sarah, and Aparna, for the motivation, collaboration, and insightful discussions.
+        \item My committee members: Dr. Valeev, Dr. Mayhall, and Dr. Troya, for your expertise and feedback at every milestone.
+        \item Last, but not least, Dr. Crawford, for guiding and inspiring me to be a better scientist and being the best mentor I could have asked for. 
+    \end{itemize}
+}
+
+% The abstract is required.
+\abstract{
+Optical and spectroscopic molecular properties are key to characterizing the behavior of molecules interacting with an applied electromagnetic field of light. Response theory has been used for a long time to calculate such properties in the frequency domain. Real-time (RT) methods solve for the frequency-dependent properties in the time domain by explicitly propagating the time-dependent wave function. Various quantum chemical methods can be incorporated with the RT formalism, including Hartree-Fock, density functional theory, configurational interaction, coupled cluster, etc. Among these, coupled cluster (CC) methods provide high accuracy for systems with strong electron correlation, making RT-CC implementations intriguing. \\
+All applications of CC methods face a substantial challenge due to their high-order polynomial scaling. For RT-CC methods, two aspects may be explored to improve the efficiency, the numerical techniques regarding the RT propagation and the reduced-scaling methods regarding CC itself. In this work, we start with the exploration of the hardware used for the calculations and the numerical integration methods for propagating the wave function parameters. Firstly, a GPU-enabled Python implementation has been developed by conducting the tensor contractions on GPUs utilizing PyTorch, a machine learning package, that has similar syntax as NumPy for tensor operations. A speedup of a factor of 14 is obtained for the RT-CCSD/cc-pVDZ absorption spectrum calculation of the water tetramer. Furthermore, to optimize the performance on GPUs, single-precision arithmetic is added to the implementation to achieve an additional speedup of a factor of two. Lastly, a group of integrators for solving differential equations are introduced to the RT framework, including regular explicit integrators, adaptive integrators, and a mixed-step-size approach customized for strong-field simulations. The optimal choice of the integrator depends on the requiring accuracy, stability and efficiency. \\
+In addition to being highly accurate, CC methods are also systematically improvable and provide a hierarchy of accuracy. Based upon the RT-CCSD implementation, the coupled cluster singles, doubles and approximate triples (CC3) method, favorable for calculating frequency-dependent properties, is tailored to the RT framework for high excitation and approximate orbital relaxation. The calculation is tested on both CPUs and GPUs, with a significant speedup gained from GPUs for the water cluster test cases. To further expand the range of applications of our RT-CC implementation, dynamic polarizabilities, first hyperpolarizabilities, and the $G'$ tensor are calculated from induced electric and magnetic dipole moments using finite-difference methods. A discussion has also been conducted to compare RT-CC3 with RT-CCSD, and time-dependent nonorthogonal orbital-optimized coupled cluster doubles (TDNOCCD) method. Additionally, electron dynamics, including the Rabi oscillation and exited state to excited state transitions, have also been explored utilizing the well-developed RT-CC framework.
+}
+%\abstract{\lipsum [1-4]}
+
+% The general audience abstract is required. There are currently no word limits.
+\abstractgenaud{
+Theoretical studies aim to match experiments, but more importantly, provide insights to interpret and predict experimental data. Calculating optical properties related to light-matter interactions is one of the most crucial tasks for characterizing molecular properties. In experiments, electromagnetic radiation in the form of light is applied to the system. The absorption or emission of light can be measured to identify, for example, the electronic structure of the molecule. In theoretical simulations, this applied radiation is represented by a perturbation operator that is added to the Hamiltonian in the Schr\"odinger equation. Quantum chemists are dedicated to developing methods that provide a better description of the spectroscopy. In the current work, the frequency, shape and the intensity of the radiation can all be finely-tuned, similar to experimental setups.\\
+The framework for extracting optical properties from time-dependent trajectories of induced dipole moments is established for accurate and efficient simulations. To improve efficiency and make the method feasible for real-world applications, a strong understanding of light-matter interactions on a quantum level and proper utilization of computational resources are both necessary. Improvements achieved and presented in this dissertation demonstrate a powerful tool for a better understanding of the nature of the interaction between the system and the electromagnetic radiation.
+}
+
+% Creating \subsubsubsection 
+\makeatletter
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+\newcommand\subsubsubsection{\@startsection{subsubsubsection}{4}{\parindent}%
+                                    {3.25ex \@plus1ex \@minus .2ex}%
+                                    {-1em}%
+                                    {\normalfont\normalsize\bfseries}}
+\newcommand*\l@subsubsubsection{\@dottedtocline{4}{12em}{5em}}
+\newcommand*{\subsubsubsectionmark}[1]{}
+\makeatother
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
 
 \begin{document}
 
-%\input{abstract.tex}
+% The following lines set up the front matter of your thesis or dissertation and are required to ensure proper formatting per the VT ETD standards. 
+  \frontmatter
+  %\pagenumbering{⟨roman⟩}
+  \maketitle
+  \tableofcontents
 
-\newpage
-\input{ch1_intro.tex}
-%\input{ch2_theory.tex}
-%\input{ch3_rtcc.tex}
-%\input{ch4_rtcc3.tex}
-%\input{ch5_conc.tex}
-%\input{extra.tex}
+% The list of figures and tables are now optional per the official ETD standards.  Unless you have a very good reason for removing them, you should leave these lists in the document. Comment them out to remove them.
+	\listoffigures
+	\listoftables
+    %\printnomenclature %Creates a list of abbreviations. Comment out to remove it. 
 
-\bibliography{refs.bib}
-\newpage
-%\input{toc}
+% sample text for abbreviations:
+%NLP is a field of computer science, artificial intelligence, and linguistics concerned with the interactions between computers and human (natural) languages.
+ 
+%\nomenclature{NLP}{Natural Language Processing}
+ 
+%$\sigma$ is the eighteenth letter of the Greek alphabet, and carries the 's' sound. In the system of Greek numerals, it has a value of 200. 
+ 
+%\nomenclature{$\sigma$}{The total mass of angels per unit area}
+
+% Attributions
+    \chapter*{Attribution}
+Chapters 3, 4 are coauthored by Prof. T. Daniel Crawford. Chapter 3 is additionally coauthored 
+by Dr. Benjamin G. Peyton. 
+Calculations, figures, tables and a majority of the text for these chapters were contributed by myself. Prof. Crawford served as a mentor for all projects and edited these chapters. For Chapter 3. Dr. Benjamin G. Peyton contributed to the Python packaged used, PyCC. For Chapter 4, Dr. H{\aa}kon Emil Kristiansen provided TDNOCCD polarizabilities.
+
+% The following sets up the document for the main part of the thesis or dissertation. Do not comment out or remove this line.
+	\mainmatter
+	%\pagenumbering{⟨arabic⟩}
+    \input{ch1_intro.tex}
+    \input{ch2_theory.tex}
+    \input{ch3/ch3.tex}
+    \input{ch4/ch4.tex}
+    \input{ch5_conc.tex}
+
+    %%%% ADDING TO TRY TO FIX BIB....
+    \bibliographystyle{achemso}
+
+      
+	% This is the standard bibtex file. Do not include the .bib extension in <bib_file_name>.
+	% Uncomment the following lines to include your bibliography: 
+	\bibliography{refs,ch3/refs_ch3}
+	%\bibliographystyle{plainnat}   
+
+	% This formats the chapter name to appendix to properly define the headers:
+	\appendix
+	% Add your appendices here. You must leave the appendices enclosed in the appendices environment in order for the table of contents to be correct.
+%	\begin{appendices}
+%% TODO: SI for Ch4: geometries
+%		\chapter{Supporting Information for Basis Set Superposition Errors in the Many-Body Expansion of Molecular Properties} \label{si:mbe}
+ %      \input{p1/si.tex}
+ %     \end{appendices}
+	
 \end{document}
+
+
+%****************************************************************************
+% Below are some general suggestions for writing your dissertation:
+%
+% 1. Label everything with a meaningful prefix so that you
+%    can refer back to sections, tables, figures, equations, etc.
+%    Usage \label{<prefix>:<label_name>} where some suggested
+%    prefixes are:
+%			ch: Chapter
+%     		se: Section
+%     		ss: Subsection
+%     		sss: Sub-subsection
+%			app: Appendix
+%     		ase: Appendix section
+%     		tab: Tables
+%     		fig: Figures
+%     		sfig: Sub-figures
+%     		eq: Equations
+%
+% 2. The VTthesis class provides for natbib citations. You should upload
+%	 one or more *.bib bibtex files. Suppose you have two bib files: some_refs.bib and 
+%    other_refs.bib.  Then your bibliography line to include them
+%    will be:
+%      \bibliography{some_refs, other_refs}
+%    where multiple files are separated by commas. In the body of 
+%    your work, you can cite your references using natbib citations.
+%    Examples:
+%      Citation                     Output
+%      -------------------------------------------------------
+%      \cite{doe_title_2016}        [18]
+%      \citet{doe_title_2016}       Doe et al. [18]
+%      \citet*{doe_title_2016}      Doe, Jones, and Smith [18]
+%
+%    For a complete list of options, see
+%      https://www.ctan.org/pkg/natbib?lang=en
+%
+% 3. Here is a sample table. Notice that the caption is centered at the top. Also
+%    notice that we use booktabs formatting. You should not use vertical lines
+%    in your tables.
+% 
+%				\begin{table}[htb]
+%					\centering
+%					\caption{Approximate computation times in hh:mm:ss for full order 						versus reduced order models.}
+%					\begin{tabular}{ccc}
+%						\toprule
+%						& \multicolumn{2}{c}{Computation Time}\\
+%						\cmidrule(r){2-3}
+%						$\overline{U}_{in}$ m/s & Full Model & ROM \\
+%						\midrule
+%						0.90 & 2:00:00 & 2:08:00\\
+%						0.88 & 2:00:00 & 0:00:03\\
+%						0.92 & 2:00:00 & 0:00:03\\
+%						\midrule
+%						Total & 6:00:00 & 2:08:06\\
+%						\bottomrule
+%					\end{tabular}
+%					\label{tab:time_rom}
+%				\end{table}
+% 
+% 4. Below are some sample figures. Notice the caption is centered below the
+%    figure.
+%    a. Single centered figure:
+%					\begin{figure}[htb]
+%						\centering
+%						\includegraphics[scale=0.5]{my_figure.eps}
+%						\caption{Average outlet velocity magnitude given an average  
+%				        input velocity magnitude of 0.88 m/s.} 
+%						\label{fig:output_rom}
+%					\end{figure}
+%    b. Two by two grid of figures with subcaptions
+%					\begin{figure}[htb]
+%						\centering
+%						\begin{subfigure}[h]{0.45\textwidth}
+%							\centering
+%							\includegraphics[scale=0.4]{figure_1_1.eps}
+%							\caption{Subcaption number one}
+%							\label{sfig:first_subfig}
+%						\end{subfigure}
+%						\begin{subfigure}[h]{0.45\textwidth}
+%							\centering
+%							\includegraphics[scale=0.4]{figure_1_2.png}
+%							\caption{Subcaption number two}
+%							\label{sfig:second_subfig}
+%						\end{subfigure}
+%
+%						\begin{subfigure}[h]{0.45\textwidth}
+%							\centering
+%							\includegraphics[scale=0.4]{figure_2_1.pdf}
+%							\caption{Subcaption number three}
+%							\label{sfig:third_subfig}
+%						\end{subfigure}
+%						\begin{subfigure}[h]{0.45\textwidth}
+%							\centering
+%							\includegraphics[scale=0.4]{figure_2_2.eps}
+%							\caption{Subcaption number four}
+%							\label{sfig:fourth_subfig}
+%						\end{subfigure}
+%						\caption{Here is my main caption describing the relationship between the 4 subimages}
+%						\label{fig:main_figure}
+%					\end{figure}
+%
+%----------------------------------------------------------------------------
+%
+% The following is a list of definitions and packages provided by VTthesis:
+%
+% A. The following packages are provided by the VTthesis class:
+%      amsmath, amsthm, amssymb, enumerate, natbib, hyperref, graphicx, 
+%      tikz (with shapes and arrows libraries), caption, subcaption,
+%      listings, verbatim
+%
+% B. The following theorem environments are defined by VTthesis:
+%      theorem, proposition, lemma, corollary, conjecture
+% 
+% C. The following definition environments are defined by VTthesis:
+%      definition, example, remark, algorithm
+%
+%----------------------------------------------------------------------------
+%
+%  I hope this template file and the VTthesis class will keep you from having 
+%  to worry about the formatting and allow you to focus on the actual writing.
+%  Good luck, and happy writing.
+%    Alan Lattimer, VT, 2016
+%
+%****************************************************************************
+
+
+
+
+

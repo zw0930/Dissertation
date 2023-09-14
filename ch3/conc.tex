@@ -1,0 +1,36 @@
+%conc.tex%
+\section{Conclusions} \label{conc}
+
+In this work, we have explored several approaches for improving the
+efficiency of the real-time coupled cluster singles and doubles method.
+Through a number of numerical experiments on absorption spectra of small
+clusters of water molecules, we have found that lowering the arithmetic
+representation of the wave function from double- to single-precision yields
+negligible differences in the resulting spectra, but speeds up the
+calculations by nearly a factor of two compared to the conventional
+double-precision implementation.  We have additionally found that migration
+of the data and the corresponding tensor contractions from CPU to GPU
+utilizing the the PyTorch framework produces a further overall speedup of a
+factor of 14.  Based on the rapidly growing computational power of GPU
+hardware and their supporting software ecosystem, we intend to carry out
+further investigation and optimization of our GPU implementation for
+calculations on larger molecular systems. 
+
+We have also investigated a variety of numerical integration schemes for
+improving the stability and efficiency of the RT-CC approach, especially
+focusing on adaptive integrators that can adjust the step size during the
+time-propagation.  In particular, we demonstrate that the Cash-Karp
+integrator, which uses an estimate of the local error in each iteration, can
+accordingly adjust the time-step to optimize the simulation in terms of
+both computing time and numerical stability.  However, for very strong
+external fields, such as a narrow Gaussian envelope or delta-pulse, both of
+which are commonly used in such simulations, we find that even a
+straightforward mixed-step integrator based on the fourth-order Runge-Kutta
+algorithm is capable of providing a stable propagation provided a small
+enough step size is used in for the duration of the field.  Such an
+algorithm should be quite favorable for such calculations with intense, but
+narrow laser pulses since it enables the existing RT-CCSD method to be
+generally used without any substantial modification to the algorithm or
+excessively increased computational cost. While further tests are required to determine the generality and robustness of
+this approach, the current results are encouraging.
+

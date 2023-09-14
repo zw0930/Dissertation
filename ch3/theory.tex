@@ -1,0 +1,150 @@
+\section{Theory} \label{theory}
+
+The quantum mechanical description of a molecule or material subjected to an 
+external time-dependent electromagnetic field requires solution of the time-dependent
+Schr\"odinger equation (TDSE), which is given in atomic units as
+\begin{equation}
+\label{eq:TDSE} 
+\hat{H}\ket{\Psi} = i\frac{d}{dt}\ket{\Psi},
+\end{equation}
+where the Hamiltonian,
+\begin{equation}
+\hat{H}(t) = \hat{H}_0 + \hat{V}(t),
+\end{equation}
+includes the molecular components, $\hat{H}_0$, and the time-dependent potential, $\hat{V}(t)$.  In the
+time-dependent coupled-cluster framework,\cite{Nascimento2016,Pedersen2019,Crawford2019} we choose phase-isolated right- and left-hand wave functions,
+respectively,
+\begin{equation}
+\ket{\Psi_{\rm CC}} = e^{\hat{T}(t)} \ket{0} e^{i \epsilon(t)},
+\end{equation}
+and 
+\begin{equation}
+\bra{\Psi_{\rm CC}} = \bra{0} \left(1 + \hat{\Lambda}(t)\right)
+e^{-\hat{T}(t)} e^{-i \epsilon(t)}.
+\end{equation}
+In these expressions, $\ket{0}$ is the single-determinant reference state, and
+$\hat{T}(t)$ and $\hat{\Lambda}(t)$ are second-quantized excitation and
+de-excitation operators, respectively, relative to $\ket{0}$.  These operators are parametrized by 
+time-dependent amplitudes that must be determined by propagating the TDSE, which, using the coupled-cluster
+form of the wave function, yields right- and left-hand forms, \textit{viz.},
+\begin{equation}
+\bra{\mu} \bar{H} \ket{0} = i \frac{dt_\mu}{dt},
+\label{Eq:derivT}
+\end{equation}
+and
+\begin{equation}
+\bra{0} \left(1 + \hat{\Lambda}\right) \left[\bar{H}, \tau_\mu\right]
+\ket{0} = -i \frac{d\lambda_\mu}{dt},
+\label{Eq:derivL}
+\end{equation}
+where the index $\mu$ denotes an excited/substituted determinant, $\tau_\mu$ is a second-quantized operator
+that generates such a determinant from the reference, $\ket{0}$, and the similarity-transformed Hamiltonian,
+\begin{equation}
+\bar{H} = e^{-\hat{T}} \hat{H} e^{\hat{T}},
+\label{Eq:simtranH}
+\end{equation}
+plays a central role in both the formal RT-CC equations and the algorithmic implementation.
+
+\subsection{Propagation of the RT-CC Equations} \label{theory_1}
+
+As mentioned in section~\ref{intro}, we propagate the CC wave function using the Runge-Kutta class of 
+integrators, which are designed to solve the general initial-value problem (IVP),
+\begin{equation}
+\frac{dy}{dt} = f(t, y), \ \ \ \ y(t_0) = y_0,
+\label{Eq:IVP}
+\end{equation}
+where $y$ is the unknown vector function, which is propagated in each iteration beginning from $y_0$, and $f(t,
+y)$ carries the functional dependence. 
+Runge-Kutta methods for solving this IVP have the general form,
+\begin{equation}\label{eq:rk_y}
+  y_{n+1} = y_{n} + h\sum_{i=1}^{s}b_{i}k_{ni},
+\end{equation}
+where
+\begin{equation}\label{eq:rk_k}
+  k_{ni} = f(x_{n} + c_{i}h, y_{n} + h\sum_{j=1}^{i-1}a_{ij}k_{nj}).
+\end{equation}
+In these expressions, $h$ is the (time) step size, and the $a_{ij}$, $b_i$,
+and $c_i$ coefficients define the particular integrator.  These coefficients
+may be written in a matrix form called Butcher Tableau\cite{Butcher1963} as
+shown in Table~\ref{tab:butcher}. The matrix is symmetric for explicit
+integrators and asymmetric for implicit integrators, and adaptive integrators
+require an additional line of coefficients.\cite{Press1992} Generally, an
+additional higher-order solution can be calculated, and the difference between
+the higher-order and lower-order solutions is used for adjusting the step
+size. More complicated algorithms have also been developed for dynamic
+simulations, higher-order differential equations, discontinuous initial-value
+problems, etc.\cite{Bastani2007, Cameron1988}.
+\begin{table}
+    \centering
+    \caption{Butcher tableau for Runge-Kutta integrators}
+    \begin{tabular}{c|cccc}
+       $c_{1}$ & $a_{11}$ & $a_{12}$ & $\cdots$ & $a_{1s}$\\ 
+       $c_{2}$ & $a_{21}$ & $a_{22}$ & $\cdots$ & $a_{2s}$\\
+       $\vdots$ & $\vdots$ & $ $ & $\ddots$ & $\vdots$ \\
+       $c_{s}$ & $a_{s1}$ & $a_{s2}$ & $\cdots$ & $a_{s,s}$\\ \hline
+        $ $ & $b_{1}$ & $b_{2}$ & $\cdots$ & $b_{s}$
+\end{tabular}
+\label{tab:butcher}
+\end{table}
+
+In the RT-CC approach, we cast the time-dependent coupled-cluster left- and
+right-hand amplitude expressions, Eqs.~(\ref{Eq:derivT}) and
+(\ref{Eq:derivL}), into the form of Eq.~(\ref{Eq:IVP}) such that the $t_\mu$
+and $\lambda_\mu$ amplitudes are collected into a single vector $y$.  Thus,
+the left-hand sides of Eqs.~(\ref{Eq:derivT}) and (\ref{Eq:derivL}) provide
+the specific form of $f(t, y)$.  Given that these are simply the residual
+equations for the $t_\mu$ and $\lambda_\mu$ amplitudes in the time-independent
+case, the initial vector, $y_0$, is naturally taken to be the solutions of the
+ground-state $\hat{T}$ and $\hat{\Lambda}$ equations.  Thus, all of the same
+algorithmic infrastructure used in efficient implementations of ground-state
+CC methods --- spin-adaptation, intermediate factorizations, symmetry
+exploitation (\textit{e.g.} using
+direct-product-decomposition\cite{Stanton1991}), \textit{etc.} --- are readily applicable to the
+RT-CC approach.  [NB: We choose to keep the underlying molecular orbitals from
+the Hartree-Fock self-consistent field procedure from responding to the field
+in order to allow direct comparison to conventional CC response and
+equation-of-motion (EOM-CC) results.]
+
+\subsection{Linear Absorption Spectra from RT-CC} \label{theory_2}
+
+In CC theory, as with other wave-function-based methods, properties of
+interest may be calculated by taking the expectation value of the
+corresponding operator, though the non-Hermitian nature of the CC
+similarity-transformed Hamiltonian in Eq.~(\ref{Eq:simtranH}) leads to a
+generalized expectation value expression involving both the left- and
+right-hand CC wave functions.  For example, the time-dependent, induced
+electric dipole moment may be computed at a given time step, $t_k$, as
+\begin{equation}\label{eq:dipole} \mu_{\alpha}(t_{k})=\bra{0} \left(1 +
+\hat{\Lambda}(t_{k})\right) e^{-\hat{T}(t_k)}\hat{\mu}_\alpha e^{\hat{T}(t_k)}
+\ket{0}(t_{k}) = \textrm{Tr}\left(\rho(t_{k})\cdot\hat{\mu}_\alpha\right)
+\end{equation} where $\rho$ is the (unrelaxed) time-dependent one-particle
+density matrix and $\hat{\mu}_\alpha$ is the $\alpha$-th Cartesian component
+of the electric dipole operator.
+
+If the perturbing potential is an electric field, \textit{i.e.}, 
+\begin{equation}
+V(t) = -\hat{\mu}_\alpha E_\beta(t),
+\end{equation}
+then, to a first approximation, the induced dipole moment is related to the dipole polarizability as\cite{Buckingham1967,Barron2009}
+\begin{equation}
+\mu_{\alpha}(t) = \alpha_{\alpha\beta}(t) \left(E_\beta(t)\right)_0,
+\end{equation}
+where $\alpha_{\alpha\beta}$ is the $\alpha,\beta-$th Cartesian component of the polarizability tensor, the
+subscript $0$ indicates that the field is taken at the origin, and we imply the Einstein summation convention over repeated
+indices.  (We note that high-intensity fields will of course induce non-linear
+contributions to the induced-dipole, thus affecting the molecule's spectroscopic
+response.)
+The frequency-dependent dipole strength function associated with the linear absorption spectrum may
+then be obtained as the imaginary component of the Fourier transform of the polarizability,
+\begin{equation}
+I(\omega) \propto \textrm{Im\ Tr}\left[ \boldsymbol{\alpha}(\omega) \right].
+\end{equation}
+In the special case that a Dirac-delta pulse is used for the shape of the electric field,
+\begin{equation}
+E_\beta(t) = \kappa_\beta \delta(t) \hat{n}_\beta,
+\end{equation}
+where $\kappa_\beta$ is the field strength and $\hat{n}_\beta$ is a unit vector in the $\beta$-th direction, then the
+dipole polarizability takes a particularly simple form, \textit{viz.},
+\begin{equation}
+\alpha_{\alpha\beta}(\omega) = \frac{\mu_\alpha(\omega)}{\kappa_\beta}.
+\end{equation}

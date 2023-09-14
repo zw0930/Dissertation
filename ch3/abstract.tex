@@ -1,0 +1,22 @@
+%abstract.tex%
+
+\section*{Abstract} \label{abstract}
+
+We explore the framework of a real-time coupled cluster method with a focus on
+improving its computational efficiency.  Propagation of the wave function via the
+time-dependent Schr\"odinger equation places high demands on computing resources,
+particularly for high level theories such as coupled cluster with polynomial scaling.
+Similar to earlier investigations of coupled cluster properties, we demonstrate that
+the use of single-precision arithmetic reduces both the storage and multiplicative
+costs of the real-time simulation by approximately a factor of two with no significant
+impact on the resulting UV/vis absorption spectrum computed via the Fourier transform
+of the time-dependent dipole moment.  Additional speedups --- of up to a factor of 14
+in test simulations of water clusters --- are obtained via a straightforward GPU-based
+implementation as compared to conventional CPU calculations.  We also find that
+further performance optimization is accessible through sagacious selection of
+numerical integration algorithms, and the adaptive methods, such as the Cash-Karp
+integrator provide an effective balance between computing costs and numerical
+stability.  Finally, we demonstrate that a simple mixed-step integrator based on the
+conventional fourth-order Runge-Kutta approach is capable of stable propagations even
+for strong external fields, provided the time step is appropriately adapted to the
+duration of the laser pulse with only minimal computational overhead.

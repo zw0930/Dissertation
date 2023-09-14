@@ -1,0 +1,494 @@
+\section{Theory} \label{theory_cc3} 
+\subsection{RT-CC3 Method} \label{theory-cc3-1}
+\subsubsection{CC3 Model}  \label{theory-cc3-11}
+In CC theory, the wave function is represented as 
+\begin{equation}
+\ket{\Phi_{CC}}=e^{\hat{T}}\ket{\Phi_{0}},
+\end{equation}
+where $\ket{\Phi_{0}}$ is the single-reference state that is typically chosen to be the Hartree-Fock wave function, and $\hat{T}$ is the cluster operator defined as
+\begin{equation}
+\hat{T} = \sum_{i=1, 2, ..., N}\hat{T}_{i},
+\label{eq:cc3-t}
+\end{equation}
+with $N$ being the number of electrons of the system. For a closed-shell restricted Hartree-Fock (RHF) formalism, the singles, doubles and triples are written as
+\begin{equation}
+\hat{T}_{1}=\sum_{ia}t_{i}^{a}a_{a}^{+}a_{i},
+\label{eq:cc3-T1}
+\end{equation}
+\begin{equation}
+\hat{T}_{2}=\frac{1}{2}\sum_{ijab}t_{ij}^{ab}a_{a}^{+}a_{b}^{+}a_{j}a_{i},
+\label{eq:cc3-T2}
+\end{equation}
+and
+\begin{equation}
+\hat{T}_{3}=\frac{1}{6}\sum_{ijkabc}t_{ijk}^{abc}a_{a}^{+}a_{b}^{+}a_{c}^{+}a_{k}a_{j}a_{i},
+\label{eq:cc3-T3}
+\end{equation}
+respectively, where $i, j, k, ...$ are occupied orbitals, and $a, b, c, ...$ are virtual orbitals. The sum of the number of occupied orbitals (NO) and the number of virtual orbitals (NV) equals to the number of molecular orbitals (NMO). From the Schr\"odinger equation of the CC wave function:
+\begin{equation}
+\hat{H}\ket{\Phi_{CC}}=E_{CC}\ket{\Phi_{CC}}=E_{CC}e^{\hat{T}}\ket{\Phi_{0}},
+\end{equation}
+the CC energy can be obtained in the form of
+\begin{equation}
+E_{CC} = \bra{\Phi_{0}}e^{-\hat{T}}\hat{H}e^{\hat{T}}\ket{\Phi_{0}}
+\label{eq:cc3-ecc}
+\end{equation}
+when left projecting the reference state together with the exponential. $e^{-\hat{T}}\hat{H}e^{\hat{T}}$ is usually denoted as the similarity-transformed Hamiltonian $\bar{H}$. If left-projecting the substituted determinant instead, the CC amplitudes can be solved using the equation
+\begin{equation}
+\bra{\mu_{i}}\bar{H}\ket{\Phi_{0}}=0,
+\label{eq:cc3-amp}
+\end{equation}
+where $i$ is the excitation level. The ground state CC energy is obtained with converged amplitudes from Eq.~(\ref{eq:cc3-amp}). If we take the CC energy as the stationary point and the amplitude equation as the constraint, an energy Lagrangian can be constructed as:
+\begin{equation}
+\mathcal{L}_{CC} = \bra{\Phi_{0}}\bar{H}\ket{\Phi_{0}} + \sum_{\mu}\lambda_{\mu}\bra{\mu}\bar{H}\ket{\Phi_{0}},
+\label{eq:cc3-lag}
+\end{equation}
+where $\lambda$ is the Lagrangian multiplier. A de-excitation operator $\hat{\Lambda}$, in analogous to the $\hat{T}$ operator, can be defined as
+\begin{equation}
+\hat{\Lambda}=\sum_{i=1, 2, ..., N}\hat{\Lambda}_{i},
+\end{equation}
+with
+\begin{equation}
+\bra{\Phi_{0}}\hat{\Lambda}=\sum_{\mu}\lambda_{\mu}\bra{\mu}
+\end{equation}
+to serve as additional parameters representing the left-hand eigenvector of $\bar{H}$, which is distinct from the right-hand eigenvector since $\bar{H}$ is not Hermitian. They are equivalent to the Lagrangian multipliers in the Lagrangian formalism. There exists an optimal set of $t's$ and $\lambda's$ that can converge the energy Lagrangian to its minimum. Therefore, the $\hat{T}$ and $\hat{\Lambda}$ amplitude equations can be derived from 
+\begin{equation}
+\frac{\partial \mathcal{L}_{CC}}{\partial \lambda_{\mu}}=0
+\label{eq:cc3-lag-t-eq}
+\end{equation}
+and
+\begin{equation}
+\frac{\partial \mathcal{L}_{CC}}{\partial t_{\mu}}=0,
+\label{eq:cc3-lag-l-eq}
+\end{equation}
+respectively.
+Although this does not lead to a simpler method of solving the energy itself, it provides a convenient approach to discussing the perturbation expansion of the energy. The the energy Lagrangian can be expanded as 
+\begin{equation}
+\mathcal{L} = \mathcal{L}^{(0)} + \mathcal{L}^{(1)} + \mathcal{L}^{(2)} + ...,
+\end{equation}
+also the cluster operators as
+\begin{equation}
+\hat{T} = \hat{T}^{(0)} + \hat{T}^{(1)}+ \hat{T}^{(2)} + ...
+\end{equation}
+and
+\begin{equation}
+\hat{\Lambda} = \hat{\Lambda}^{(0)} + \hat{\Lambda}^{(1)} + \hat{\Lambda}^{(2)} + ...
+\end{equation}
+From Eqs.~(\ref{eq:cc3-lag-t-eq}) and~(\ref{eq:cc3-lag-l-eq}), the $nth$-order amplitudes can be calculated from
+\begin{equation}
+\frac{\partial{\mathcal{L}^{(n)}}}{\partial{t_{\mu}^{(n)}}}=0
+\label{eq:cc3-partial-lag-t}
+\end{equation}
+and
+\begin{equation}
+\frac{\partial{\mathcal{L}^{(n)}}}{\partial{\lambda_{\mu}^{(n)}}}=0.
+\label{eq:cc3-partial-lag-l}
+\end{equation}
+With the knowledge of $\hat{T}$ amplitudes up to the $n$-th order,  the $(2n+1)$-order energy can be calculated, and with the knowledge of $\hat{\Lambda}$ amplitudes up to the $n$-th order, the $(2n+2)$-order energy can be calculated. These rules are known as Wigner's $(2n+1)$ and $(2n+2)$ rules.\cite{Kvasnivcka1980, Shavitt2009} It can be proved that the zeroth-order amplitudes are equal to zero, the first-order amplitudes contain only doubles, and the first non-vanishing order for triples is the second order, as demonstrated in Ref.~\citenum{Koch1997}.
+
+In CC3, only the second-order triples are kept. Singles are treated as the approximate orbital relaxation parameters at the zeroth-order, as opposed to the second-order in MBPT. Applying these conditions to Eq.~(\ref{eq:cc3-lag}) and partitioning the Hamiltonian into the Fock operator $\hat{F}$ and the fluctuation operator $\hat{U}$ results in:
+\begin{equation}
+\hat{H} =  \hat{F} + \hat{U},
+\label{eq:cc3-h}
+\end{equation}
+the CC3 Lagrangian becomes
+\begin{align}
+\begin{split}
+\mathcal{L}_{CC3} &= \bra{\Phi_{0}}\bar{H}\ket{\Phi_{0}} \\
+&+ \sum_{\mu_{1}}\lambda_{\mu_{1}}\bra{\mu_{1}}H + [H, \hat{T}_{2}] + [H, \hat{T}_{3}] \ket{\Phi_{0}} \\
+&+ \sum_{\mu_{2}}\lambda_{\mu_{2}}\bra{\mu_{2}}H + [H, \hat{T}_{2}] + \frac{1}{2}[[H, \hat{T}_{2}], \hat{T}_{2}] + [H, \hat{T}_{3}] \ket{\Phi_{0}} \\
+&+ \sum_{\mu_{3}}\lambda_{\mu_{3}}\bra{\mu_{3}}[H, \hat{T}_{2}] + [F, \hat{T}_{3}] \ket{\Phi_{0}},
+\label{eq:cc3-lag-cc3}
+\end{split}
+\end{align} 
+where the operator $H$ and $F$ represent the $T_{1}$-transformed Hamiltonian and Fock operator, respectively, when a $T_{1}$-transformed operator is defined as
+\begin{equation}
+O = e^{-\hat{T}_{1}}\hat{O}e^{\hat{T}_{1}}.
+\end{equation}
+The perturbative order of each term in Eq.~(\ref{eq:cc3-lag-cc3}) can be determined by the perturbative orders of its components. For instance, as $F$ and $U$ are considered to be zeroth- and first-order, respectively, and $\Lambda_{2}$ is considered to be first-order, the term $\sum_{\mu_{2}}\lambda_{\mu_{2}}\bra{\mu_{2}}[U, \hat{T}_{3}]\ket{\Phi_{0}}$ contributes to the fourth-order energy. Similarly, the overall corrections to the fourth- and fifth-order energies are extracted as:
+\begin{equation}
+ \sum_{\mu_{2}}\lambda_{\mu_{2}}\bra{\mu_{2}}[U, \hat{T}_{3}]\ket{\Phi_{0}} + 
+ \sum_{\mu_{3}}\lambda_{\mu_{3}}\bra{\mu_{3}}[H, \hat{T}_{2}] + [F, \hat{T}_{3}]\ket{\Phi_{0}}
+  \rightarrow E^{(4)},
+\end{equation}
+and
+\begin{equation}
+ \sum_{\mu_{3}}\lambda_{\mu_{3}}\bra{\mu_{3}}[U, \hat{T}_{2}]\ket{\Phi_{0}}
+  \rightarrow E^{(5)},
+\end{equation}
+respectively.
+
+To derive the CC3 $\hat{T}$ amplitude equation, we bring $\mathcal{L}_{CC3}$ from Eq.~(\ref{eq:cc3-lag-cc3}) into Eq.~(\ref{eq:cc3-lag-t-eq}). Then, the equations for $\hat{T}_{1}$, $\hat{T}_{2}$, and $\hat{T}_{3}$ can be written in the form of
+\begin{equation}
+\bra{\mu_{1}}H + [H, \hat{T}_{2}] + [H, \hat{T}_{3}] \ket{\Phi_{0}}=0,
+\label{eq:cc3-t1}
+\end{equation}
+\begin{equation}
+\bra{\mu_{2}}H + [H, \hat{T}_{2}] + \frac{1}{2}[[H, \hat{T}_{2}], \hat{T}_{2}] + [H, \hat{T}_{3}] \ket{\Phi_{0}}=0,
+\label{eq:cc3-t2}
+\end{equation}
+and
+\begin{equation}
+\bra{\mu_{3}}[H, \hat{T}_{2}] + [F, \hat{T}_{3}] \ket{\Phi_{0}}=0.
+\label{eq:cc3-t3}
+\end{equation}
+Expanding and rearranging terms in Eq.~(\ref{eq:cc3-t3}), triples can be calculated explicitly as 
+\begin{equation}
+t_{\mu_{3}}= -\frac{\bra{\mu_{3}}[U, \hat{T}_{2}]\ket{\Phi_{0}}}{\epsilon_{\mu_{3}}},
+\label{eq:cc3-final-t3}
+\end{equation}
+where the denominator $\epsilon_{\mu_{3}}$ is the difference between the sum of the virtual orbital energies and the sum of the occupied orbital energies. The $\hat{T}_{1}$ and $\hat{T}_{2}$ equations can also be rewritten as
+\begin{equation}
+\bra{\mu_{1}} e^{-(\hat{T}_{1}+\hat{T}_{2})}\hat{H}e^{\hat{T}_{1}+\hat{T}_{2}}\ket{\Phi_{0}} +\bra{\mu_{1}}[\hat{H}, \hat{T}_{3}] \ket{\Phi_{0}}=0
+\label{eq:cc3-final-t1}
+\end{equation}
+and
+\begin{equation}
+\bra{\mu_{2}} e^{-(\hat{T}_{1}+\hat{T}_{2})}\hat{H}e^{\hat{T}_{1}+\hat{T}_{2}}\ket{\Phi_{0}} +\bra{\mu_{2}}[H, \hat{T}_{3}] \ket{\Phi_{0}}=0
+\label{eq:cc3-final-t2}
+\end{equation}
+to separate the CCSD component in the first term and the contribution from the triples in the second term. The contributions to the $\hat{T}_{1}$ and  $\hat{T}_{2}$ amplitudes from the connected triples are defined as
+\begin{equation}
+X_{1} = \bra{\mu_{1}}[\hat{H}, \hat{T}_{3}] \ket{\Phi_{0}}
+\label{eq:cc3-x1}
+\end{equation}
+and
+\begin{equation}
+X_{2} = \bra{\mu_{2}}[H, \hat{T}_{3}] \ket{\Phi_{0}}.
+\label{eq:cc3-x2}
+\end{equation}
+
+When calculating the CC3 ground state energy, all amplitudes are solved iteratively. During each iteration, the approximate $\hat{T}_{3}$ amplitude, which is correct to the second order, is calculated using the  $\hat{T}_{1}$ and  $\hat{T}_{2}$ amplitudes from the previous iteration, as shown in Eq.~(\ref{eq:cc3-final-t3}). Its contribution to the new $\hat{T}_{1}$ and  $\hat{T}_{2}$ amplitudes, $X_{1}$ and $X_{2}$, can be calculated using Eqs.~(\ref{eq:cc3-x1}) and~(\ref{eq:cc3-x2}), and then added to the CCSD amplitude residuals to obtain the $\hat{T}_{1}$ and  $\hat{T}_{2}$ amplitudes for the current iteration. 
+
+To calculate other molecular properties, $\hat{\Lambda}$ amplitudes are calculated by inserting $\mathcal{L}_{CC3}$ into Eq.~(\ref{eq:cc3-lag-l-eq}). The resulting $\hat{\Lambda}$ equations can be organized in matrix form as follows:
+\begin{gather}
+ \begin{pmatrix} \lambda_{\mu_{1}}&\lambda_{\mu_{2}}&\lambda_{\mu_{3}} \end{pmatrix}
+ \textbf{A}
+ = -
+  \begin{pmatrix}
+   \bra{\Phi_{0}} \bar{H}\ket{\mu_{1}}&
+   \bra{\Phi_{0}} \bar{H}\ket{\mu_{2}}&
+   0
+   \end{pmatrix},
+\end{gather}
+where
+\begin{gather}
+ \textbf{A} = 
+\begin{pmatrix} 
+   \bra{\mu_{1}}H + [\hat{H}, \hat{T}_{2}]\ket{\nu_{1}} & \bra{\mu_{1}}H \ket{\nu_{2}} & \bra{\mu_{1}}\hat{H} \ket{\nu_{3}} \\
+   \bra{\mu_{2}}H + [H, \hat{T}_{2}]+ [\hat{H}, \hat{T}_{3}]\ket{\nu_{1}} & \bra{\mu_{2}}H + [\hat{H}, \hat{T}_{2}]\ket{\nu_{2}} &  \bra{\mu_{2}} H \ket{\nu_{3}}  \\
+    \bra{\mu_{3}} [H, \hat{T}_{2}]\ket{\nu_{1}} &  \bra{\mu_{3}} H \ket{\nu_{2}} & 0
+  \end{pmatrix}.
+\end{gather}
+Similar to $\hat{T}$ equations, only terms involving triples need to be calculated to obtain the $\hat{\Lambda}_{3}$ amplitude itself and its contributions to the $\hat{\Lambda}_{1}$ and $\hat{\Lambda}_{2}$ amplitudes, which are defined as
+\begin{equation}
+Y_{1} = \bra{\Phi_{0}}\hat{\Lambda}_{2}[\hat{H}, \hat{T}_{3}]\ket{\nu_{1}} + \bra{\Phi_{0}}\hat{\Lambda}_{3}[\hat{H}, \hat{T}_{2}]\ket{\nu_{1}}
+\label{eq:cc3-y1}
+\end{equation}
+and
+\begin{equation}
+Y_{2} = \bra{\Phi_{0}}\hat{\Lambda}_{3}[H, \hat{T}_{2}]\ket{\nu_{2}}.
+\label{eq:cc3-y2}
+\end{equation}
+The simplified $\hat{\Lambda}_{3}$ equation for the second-order $\hat{\Lambda}_{3}$ amplitudes may be written as
+\begin{equation}
+\lambda_{\mu_{3}}=-\frac{\bra{\Phi_{0}}\hat{\Lambda}_{1}\hat{H}\ket{\nu_{3}} + \bra{\Phi_{0}}\hat{\Lambda}_{2}H\ket{\nu_{3}}}{\epsilon_{\mu_{3}}}.
+\label{eq:cc3-l3}
+\end{equation}
+
+Now, if we consider the case where the molecule is subjected to an external perturbation $\beta\hat{V}$, such as an electromagnetic field, where $\beta$ represents the field strength and $\hat{V}$ is the one-electron perturbation operator, the Hamiltonian can be written as follows:
+\begin{equation}
+\hat{H}  \rightarrow \hat{H} + \beta\hat{V} = \hat{F} + \beta\hat{V} + \hat{U},
+\label{eq:cc3-h-pert}
+\end{equation}
+where $\hat{F}+\hat{U}$ can be seen as the zeroth-order Hamiltonian, and $\beta\hat{V}$ contributes to the first-order energy Lagrangian as the first-order Hamiltonian. If we consider this scenario as the zeroth-order $\hat{F}$ being perturbed by two individual perturbations, $\hat{U}$ and $\beta\hat{V}$, the modified Fock operator $\hat{F}+\beta\hat{V}$ can no longer be treated as zeroth-order. Since CC3 does not involve explicit orbital relaxation, no approximations should be applied to the singles due to their unique role. All terms that involve $\hat{V}$ must be retained, leading to an additional term in the $\hat{T}_{3}$ equation compared to Eq.~(\ref{eq:cc3-t3}). The modified $\hat{T}_{3}$ equation can be written as 
+\begin{equation}
+t_{\mu_{3}}= -\frac{\bra{\mu_{3}}[U, \hat{T}_{2}]\ket{\Phi_{0}} + \frac{1}{2}\bra{\mu_{3}}[[\beta V, \hat{T}_{2}], \hat{T}_{2}]\ket{\Phi_{0}}}{\epsilon_{\mu_{3}}}.
+\label{eq:cc3-final-t3-pert}
+\end{equation}
+Under the influence of an external perturbation, it becomes possible to calculate properties that arise from its interaction with the system. For example, if the external perturbation is represented by an external electric field, the induced electric dipole moments can be determined. In the case of first-order properties, the expectation value of the corresponding operator can be computed. One convenient approach involves calculating the derivative of the first-order Lagrangian with respect to the field strength, as shown in Eq.~(\ref{eq:cc3-prop1}). Alternatively, the expectation value can be represented as the contraction of the one-electron density $D_{pq}$ and the property integrals $V_{pq}$, as demonstrated in Eq.~(\ref{eq:cc3-prop2}), where $p$ and $q$ represent molecular orbitals. 
+\begin{equation}
+\langle\hat{V}\rangle = \frac{\partial\mathcal{L}_{CC3}^{(1)}}{\partial\beta}
+\label{eq:cc3-prop1}
+\end{equation}
+\begin{equation}
+\langle\hat{V}\rangle = \sum_{pq}D_{pq}V_{pq}
+\label{eq:cc3-prop2}
+\end{equation}
+By equating the right-hand sides of Eqs.~(\ref{eq:cc3-prop1}) and~(\ref{eq:cc3-prop2}), terms for calculating the elements of the one-electron density matrix can be derived. The contribution from triples is highlighted and presented as
+\begin{equation}
+\bra{\Phi_{0}}\hat{\Lambda}_{2}[E_{pq}, \hat{T}_{3}]\ket{\Phi_{0}} + \bra{\Phi_{0}}\hat{\Lambda}_{3}[E_{pq}, \hat{T}_{3}]\ket{\Phi_{0}} 
++ \frac{1}{2}\bra{\Phi_{0}}\hat{\Lambda}_{3}[[E_{pq}, \hat{T}_{2}], \hat{T}_{2}]\ket{\Phi_{0}} \rightarrow D_{pq},
+\label{eq:cc3-opdm}
+\end{equation}
+where $E_{pq}$ is the unitary-group generator that can be expanded as $a_{p_{\alpha}}^{+}a_{q_{\alpha}} + a_{p_{\beta}}^{+}a_{q_{\beta}}$.
+
+\subsubsection{Implementation of RT-CC3 Method}  \label{theory-cc3-12}
+The hamiltonian perturbed by an external field is defined in Eq.~(\ref{eq:cc3-h-pert}). With the semi-classical dipole approximation, the time-dependent Hamiltonian can be written as
+\begin{equation}
+\hat{H}(t)= \hat{H}_{0} - \hat{\mu} \cdot \textbf{E}(t),
+\label{eq:cc3-H-efield}
+\end{equation}
+where $\hat{\mu}$ is the electric dipole operator, and $\textbf{E}(t)$ is the electric field vector with a chosen intensity and shape. In RT-CC methods, the differential equations of the time-dependent $\hat{T}$ and $\hat{\Lambda}$ amplitudes can be derived from the time-dependent Schr\"odinger equation by explicitly differentiating the amplitudes with respect to time, which can be written as
+\begin{equation}
+i\frac{dt_{\mu}}{dt} = \bra{\mu}\bar{H}\ket{\Phi_{0}}
+\label{eq:cc3-rt-t}
+\end{equation}
+and
+\begin{equation}
+-i\frac{d\lambda_{\mu}}{dt} = \bra{\Phi_{0}}(1+\hat{\Lambda})[\bar{H}, \tau_{\mu}]\ket{\Phi_{0}},
+\label{eq:cc3-rt-l}
+\end{equation}
+where $\tau_{\mu}$ is the excitation operator. It is important to note that the right-hand sides of the two equations are equivalent to the amplitude residuals in the ground state amplitude equations. Therefore, CC3 equations that include the external perturbation, as shown in section~\ref{theory-cc3-11}, can be inserted into the real-time equations straightforwardly. The additional terms that need to be evaluated at each time step beyond RT-CCSD can be found in Eqs.~(\ref{eq:cc3-x1}),~(\ref{eq:cc3-x2}),~(\ref{eq:cc3-y1}), and~(\ref{eq:cc3-y2}).   
+
+The spin-adapted expression in a closed-shell RHF formalism are shown here by inserting the form of $\hat{T}$  amplitudes in Eqs.~(\ref{eq:cc3-T1}), ~(\ref{eq:cc3-T2}) and~(\ref{eq:cc3-T3}) and the similar form for the $\hat{\Lambda}$ amplitudes into Eqs.~(\ref{eq:cc3-x1}),~(\ref{eq:cc3-x2}),~(\ref{eq:cc3-y1}) and~(\ref{eq:cc3-y2}). The terms in $X_{1}$, $X_{2}$, $Y_{1}$ and $Y_{2}$ become
+\begin{equation}
+X_{i}^{a}= \sum_{jkbc}(t_{ijk}^{abc}-t_{ijk}^{cba})L_{jkbc},
+\label{eq:cc3-x1-exp}
+\end{equation}
+\begin{align}
+\begin{split}
+X_{ij}^{ab}&=P_{ij}^{ab}\{\sum_{kc}(t_{ijk}^{abc}-t_{ijk}^{cba})\tilde{f}_{kc} + \sum_{kce}(2t_{ijk}^{cbe}-t_{ijk}^{ceb}-t_{ijk}^{ebc}) \tilde{\langle ak|ce \rangle} \\
+ &- \sum_{kmc}(2t_{mjk}^{cba}-t_{mjk}^{bca}-t_{mjk}^{abc}) \tilde{\langle km|ic \rangle} \},
+\label{eq:cc3-x2-exp}
+\end{split}
+\end{align}
+\begin{align}
+\begin{split}
+Y_{a}^{i} &= \sum\limits_{\substack{jkl\\bcd}}[(t_{jkl}^{bcd}\langle ij|cd \rangle \lambda_{ab}^{kl} + t_{jkl}^{bcd} \langle kl|ab \rangle \lambda_{cd}^{ij}+ t_{jkl}^{bcd}L_{ij}^{ab}\lambda_{cd}^{kl}) \\
+ &-(t_{jkl}^{bcd}L_{ijac}\lambda_{bd}^{kl} + t_{jkl}^{bcd}L_{jibc}\lambda_{ad}^{kl} + t_{jkl}^{bcd}L_{ijab}\lambda_{cd}^{il})\\
+ &-(t_{jk}^{bc} \tilde{\langle jd|la \rangle} \lambda_{bcd}^{lki} + t_{jk}^{bc} \tilde{\langle dj|la \rangle} \lambda_{bcd}^{ikl} 
+   + t_{jk}^{bc} \tilde{\langle id|lb \rangle} \lambda_{acd}^{lkj} + t_{jk}^{bc} \tilde{\langle di|la \rangle} \lambda_{acd}^{jkl})] \\
+ &+\sum\limits_{\substack{jk\\bcde}} t_{jk}^{bc} \tilde{\langle de|ab \rangle} \lambda_{cde}^{kij}
+   +\sum\limits_{\substack{jklm\\bc}}t_{jk}^{bc} \tilde{\langle ij|lm \rangle} \lambda_{abc}^{lmk},
+\label{eq:cc3-y1-exp}
+\end{split}
+\end{align}
+and
+\begin{equation}
+Y_{ab}^{ij}= P_{ij}^{ab} \{ \sum_{lde} \tilde{\langle de|al \rangle} \lambda_{dbe}^{ijl} -  \sum_{lmd} \tilde{\langle id|ml \rangle} \lambda_{abd}^{mjl} \},
+\label{eq:cc3-y2-exp}
+\end{equation}
+where the triples can be calculated from Eqs.~(\ref{eq:cc3-final-t3-pert}) and~(\ref{eq:cc3-l3}) as
+\begin{equation}
+t_{ijk}^{abc}=-{\epsilon_{ijk}^{abc}}^{-1}P_{ijk}^{abc}\{\sum_{e}t_{ij}^{ae} \tilde{\langle cb|ke \rangle} 
+  -\sum_{m}t_{im}^{ab} \tilde{\langle mc|jk \rangle\}}
+\label{eq:cc3-t3-exp}
+\end{equation}
+and
+\begin{align}
+\begin{split}
+\lambda_{abc}^{ijk}&=P_{ijk}^{abc}\{ (L_{ijab}\lambda_{c}^{k} - L_{ijac}\lambda_{b}^{k}) 
+  + (\tilde{f}_{ia}\lambda_{bc}^{jk} + \sum_{l} \tilde{\langle kj|al \rangle} \lambda_{bc}^{li} - \sum_{d} \tilde{\langle kd|ab \rangle} \lambda_{cd}^{ij}) \\
+ &+ \frac{1}{2}P_{ij}^{ab}(-\tilde{f}_{ja}\lambda_{bc}^{ik} - \sum_{l} \tilde{L}_{ijal}\lambda_{bc}^{lk} + \sum_{d} \tilde{L}_{djab}\lambda_{cd}^{ki}) \}.
+\label{eq:cc3-l3-exp}
+\end{split}
+\end{align}
+In Eqs.~(\ref{eq:cc3-x1-exp}) to~(\ref{eq:cc3-l3-exp}), the one- and two-electron integrals, $f_{pq}$ and $\langle pq|rs \rangle$, are extracted from the one- and two-electron component of the Hamiltonian, respectively, as 
+\begin{equation}
+\hat{H} = \sum_{pq}f_{pq}\{E_{pq}\} + \frac{1}{2}\sum_{pqrs}\langle pq|rs \rangle \{E_{pq}E_{qs}\},
+\end{equation}
+where $\{E_{pq}\}$ denotes the normal ordering unitary-group generator. $L_{pqrs}$ is defined as
+\begin{equation}
+L_{pqrs} = 2\langle pq|rs \rangle - \langle pq|sr \rangle.
+\end{equation}
+$\tilde{f}_{pq}$, $\tilde{\langle pq|rs \rangle}$ and $\tilde{L}_{pqrs}$ are components of the $T_{1}$-transformed Hamiltonian. The permutation operators are defined as 
+\begin{equation}
+P_{ij}^{ab}f_{ij}^{ab} = f_{ij}^{ab} + f_{ji}^{ba}
+\label{eq:cc3-pijab}
+\end{equation}
+and
+\begin{equation}
+P_{ijk}^{abc}f_{ijk}^{abc} = f_{ijk}^{abc} + f_{jik}^{bac} + f_{ikj}^{acb} + f_{kji}^{cba} + f_{kij}^{cab} + f_{jki}^{bca}.
+\label{eq:cc3-pijkabc}
+\end{equation}
+The explicit formula of the additional terms involving triples in the one-electron density can be written as
+\begin{equation}
+D_{ij} = -\frac{1}{2}\sum\limits_{\substack{kl\\abc}}t_{ilk}^{abc}\lambda_{abc}^{jlk},
+\label{eq:cc3-dij}
+\end{equation}
+\begin{equation}
+D_{ab} = \frac{1}{2}\sum\limits_{\substack{ijk\\cd}}t_{ijk}^{bdc}\lambda_{adc}^{ijk},
+\end{equation}
+and
+\begin{equation}
+D_{ia} = \sum_{jkbc}(t_{ijk}^{abc} - t_{ijk}^{bac})\lambda_{bc}^{jk} - \sum\limits_{\substack{jkl\\bcd}}\lambda_{bcd}^{jkl}t_{il}^{cd}t_{kj}^{ab}.
+\end{equation}
+
+In each time step of the real-time propagation, the CCSD amplitude residuals are calculated first, followed by the calculation of the contribution from triples to singles and doubles. Since the $\hat{T}_{3}$ amplitude is a six-index quantity, storing the entire tensor with a size of $NO^{3}NV^{3}$ is neither preferable nor feasible due to limited memory, especially when dealing with large systems and/or large basis sets. In our implementation, only a specific subset of triples is calculated on-the-fly when it's needed in a contraction. For example, in Eq.~(\ref{eq:cc3-x1-exp}), the subset of triples corresponding to a certain set of occupied orbitals $i, j, k$ is calculated and contracted with the subset of integrals corresponding to the same orbitals $j$ and $k$ to calculate its contribution to the $\hat{T}_{1}$ amplitudes with the occupied orbital $i$. It's important to note that the subset of triples to be calculated can be a tensor with fixed occupied orbitals $i, j, k$, or fixed unoccupied orbitals $a, b, c$. The former approach requires performing the triple calculations and subsequent contractions $NO^{3}$ times, while the latter requires these calculations $NV^{3}$ times. As $NV$ is typically much larger than $NO$, using triples of a specific set of unoccupied orbitals is significantly more time-consuming. Thus, it's avoided if not necessary. As seen in Eq.~(\ref{eq:cc3-dij}), the triples for a specific set of $a,b,c$ are required. Therefore, the calculation of $D_{ij}$ takes significantly longer compared to the other terms.
+
+\subsection{Frequency-Dependent Properties from RT Simulations} \label{theory-cc3-2}
+\subsubsection{Absorption Spectrum} \label{theory-cc3-21}
+As shown in Eq.~(\ref{eq:cc3-H-efield}), the perturbation operator can be specifically written as
+\begin{equation}
+\hat{V}(t) = -\hat{\mu}\cdot \textbf{E}(t),
+\end{equation}
+with the system interacting with an external electric field $\textbf{E}(t)$. Linear absorption spectra can be calculated using the frequency-dependent counterparts of the time-dependent dipole and electric field, obtained via the Fourier transform:
+\begin{equation}
+\tilde{f}(\omega) = \frac{1}{2\pi}\int_{-\infty}^{+\infty}f(t)e^{i\omega t}dt.
+\end{equation}
+The dipole strength function used here to quantify the probability of the absorption process is proportional to the imaginary part of the trace of the dipole polarizability tensor $\boldsymbol{\alpha}(\omega)$, as shown below:
+\begin{equation}
+I(\omega) \propto Im [\sum_{\beta}\alpha_{\beta \beta}(\omega)],
+\end{equation}
+where $\beta$ is the Cartesian axis $x, y, z$. $\alpha_{\beta\beta}$ can be calculated as
+\begin{equation}
+\alpha_{\beta\beta}(\omega) = \frac{\tilde{\mu_{\beta}}}{\tilde{E_{\beta}}} 
+\end{equation}
+under the condition that the time-dependent induced dipole moment in the $\beta$-axis is approximated by the first-order term induced by the electric field in the same direction:
+\begin{equation}
+\mu_{\beta}(t) = \alpha_{\beta\beta}(E_{\beta}(t))_{0},
+\end{equation}
+where the subscript of the field indicates that it is taken at the origin. 
+
+\subsubsection{Dynamic Polarizabilities and Hyperpolarizabilities} \label{theory-cc3-22}
+Considering that the molecule is exposed to a field with the form of
+\begin{equation}
+E_{\beta}(t) = A_{\beta}cos(\omega t),
+\label{eq:cc3-polar-field}
+\end{equation}
+where $A_{\beta}$ and $\omega$ is the maximum amplitude and the frequency of the field, respectively, with $\beta$ being the Cartesian axis that indicates the direction of the field. Under this electric field, the time-dependent electric dipole moments can be expanded as
+\begin{equation}
+\mu_{\alpha}(t) = (\mu_{\alpha})_{0} + \alpha_{\alpha\beta}(\omega)cos(\omega t)A_{\beta} 
++ \frac{1}{4}[ \beta_{\alpha\beta\beta}(-2\omega;\omega,\omega)cos(2\omega t) + \beta_{\alpha\beta\beta}(0;\omega,-\omega)]A_{\beta}^{2} + ...,
+\label{eq:cc3-polar-mu1}
+\end{equation}
+where $\alpha(\omega)$ is the polarizability, $\beta(-2\omega;\omega,\omega)$ and $\beta(0;\omega,-\omega)$ are the first-hyperpolarizabilities corresponding to the second-harmonic generation (SHG) and optical rectification (OR), respectively. Alternatively, if we write the series expansion of the electric dipole moment as 
+\begin{equation}
+\mu_{\alpha}(t) = \mu_{\alpha}^{(0)} + \mu_{\alpha\beta}^{(1)} A_{\beta} + \mu_{\alpha\beta\beta}^{(2)}A_{\beta}^{2} + ...,
+\label{eq:cc3-polar-mu2}
+\end{equation}
+and then equate Eqs.~(\ref{eq:cc3-polar-mu1}) and~(\ref{eq:cc3-polar-mu2}), we can obtain
+\begin{equation}
+\mu_{\alpha\beta}^{(1)} = \alpha_{\alpha\beta}cos(\omega t)
+\label{eq:cc3-polar-alpha}
+\end{equation}
+and
+\begin{equation}
+\mu_{\alpha\beta\beta}^{(2)} = \frac{1}{4}[ \beta_{\alpha\beta\beta}(-2\omega;\omega,\omega)cos(2\omega t) + \beta_{\alpha\beta\beta}(0;\omega,-\omega)].
+\label{eq:cc3-polar-beta}
+\end{equation}
+One way to calculate the first- and second-order dipole moments is using the finite-difference method, which is commonly employed for numerical differentiation. To apply it to real-time methods, induced dipole moments from simulations with different field strengths are required. For instance, conducting four separate simulations with field strengths of $A$, $-A$, $2A$, and $-2A$ as the only varying parameter, allows us to express $\mu_{\alpha \beta}^{(1)}$ and $\mu_{\alpha \beta\beta}^{(2)}$ as
+\begin{equation}
+\mu_{\alpha \beta}^{(1)}(t)=\frac{8[\mu_{\alpha}(t,A_{\beta})-\mu_{\alpha}(t,-A_{\beta})]-[\mu_{\alpha}(t,2A_{\beta})-\mu_{\alpha}(t,-2A_{\beta})]}{12A_{\beta}}
+\end{equation}
+and 
+\begin{equation}
+\mu_{\alpha \beta\beta}^{(2)}(t)=\frac{16[\mu_{\alpha}(t,A_{\beta})+\mu_{\alpha}(t,-A_{\beta})]-[\mu_{\alpha}(t,2A_{\beta})+\mu_{\alpha}(t,-2A_{\beta})]-30\mu^{(0)}_{\alpha}}{24A_{\beta}^2}.
+\end{equation}
+With the value of $\mu_{\alpha \beta}^{(1)}$ at each time step, we can fit the trajectory into a cosine curve, as shown in Eq.~(\ref{eq:cc3-polar-alpha}). The polarizability $\alpha(\omega)$ will be the amplitude of the fitted curve. Similarly, the trajectory of $\mu_{\alpha \beta\beta}^{(2)}$ can also be fitted into a curve with the form $1/4[A\cos(\omega t) + B]$, where $\beta(-2\omega;\omega,\omega)$ and $\beta(0;\omega,-\omega)$ are the values of $A$ and $B$ respectively. Additional details about the finite difference method and its application in the real-time framework can be found in Ref.~\citenum{Ding2013}. It's worth noting that although calculating polarizabilities/hyperpolarizabilities at each frequency requires four real-time simulations, each simulation does not need to be as long as the ones used for calculating the absorption spectrum, where the spectrum's resolution depends on the propagation length. Moreover, both polarizabilities and hyperpolarizabilities at the same frequency can be obtained from the same set of simulations. The difference lies only in the post-processing steps.
+
+\subsubsection{$G'$ Tensor} \label{theory-cc3-23}
+In addition to the properties associated with the induced electric dipole moments, the $G'$ tensor that is related to optical rotation is also accessible under this formalism, but it's connected to the magnetic dipole moments induced by an external electric field. Following the same steps, we first expand the magnetic dipole moments as:
+\begin{equation}
+m_{\alpha} (t)= (m_{\alpha} )_{0} +\frac{1}{\omega} G^{'}_{\beta\alpha}(\omega)\dot E_{\beta} + ...,
+\end{equation}
+with the time derivative of the field being $\dot E_{\beta} = -A\omega sin(\omega t)$, and then equate it with the series expansion shown as
+\begin{equation}
+m_{\alpha}(t)= m_{\alpha}^{(0)} + m_{\alpha \beta}^{(1)}(t)\ A_{\beta} + ...
+\end{equation}
+$m_{\alpha\beta}^{(1)}$ can be written as
+\begin{equation}
+m_{\alpha \beta}^{(1)}(t)= G^{'}_{\alpha \beta}(\omega)sin(\omega t),
+\end{equation}
+and calculated as
+\begin{equation}
+m_{\alpha \beta}^{(1)}(t)=\frac{8[m_{\alpha}(t,A_{\beta})-m_{\alpha}(t,-A_{\beta})]-[m_{\alpha}(t,2A_{\beta})-m_{\alpha}(t,-2A_{\beta})]}{12A_{\beta}}.
+\end{equation}
+For the magnetic dipole moments, no additional modifications to the real-time framework need to be made. Once we calculate the one-electron density, the electric dipole moment can be obtained by contrasting the density with the electric dipole operator, and the magnetic dipole moment can be obtained by contracting the density with the magnetic dipole operator.
+
+\subsubsection{Ramped Continuous Wave} \label{theory-cc3-24}
+As shown in Eq.~(\ref{eq:cc3-polar-field}), a cosine wave with a frequency of $\omega$ is used to calculate the optical properties. In practice, instead of having the same field from the beginning to the end, a ramped wave is applied, gradually switching on the field. There are two major types of ramped waves: the linear ramped continuous wave (LRCW):
+\begin{equation}
+F_{LRCW}=\begin{cases}
+\frac{t}{t_{r}}cos(\omega t), \ \ 0\le t < t_{r} ,\\
+cos(\omega t),\ \ \  \ t_{r}\le t \le t_{tot},
+\end{cases}
+\end{equation}
+and the quadratic ramped continuous wave (QRCW):
+\begin{equation}
+ F_{QRCW}=\begin{cases}
+\frac{2t^{2}}{t_{r}^{2}}cos(\omega t),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0\le t < \frac{t_{r}}{2} ,\\
+[1-\frac{2(t-t_{r})^{2}}{t_{r}^{2}}]cos(\omega t), \ \ \ \frac{t_{r}}{2}\le t < t_{r} ,\\
+cos(\omega t),\ \ \  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t_{r}\le t \le t_{tot},
+\end{cases}
+\end{equation}
+where $t_{r}$ is the duration of the ramped field and $t_{tot}$ is the total length of the simulation. For a field with a frequency $\omega$, an optical cycle can be calculated as 
+\begin{equation}
+t_{c} = \frac{2\pi}{\omega}.
+\end{equation}
+Therefore,
+\begin{equation}
+t_{tot} = t_{r} + t_{p} = n_{r}t_{c} + n_{p}t_{c},
+\end{equation}
+where $n_{r}$ represents the number of optical cycles during which the ramped field is applied, $n_{p}$ indicates the number of optical cycles used for the subsequent curve fitting, and $t_{p}$ signifies the portion of the propagation utilized for property calculation. Ofstad et al. demonstrated in Ref.~\citenum{Ofstad2023} that QRCW can reduce the number of optical cycles required for both the ramped and subsequent cycles. This reduction is attributed to QRCW's more gradual amplification over time in comparison to LRCW, resembling an adiabatic switch-on of the field. This allows the system to stabilize more rapidly, even in a shorter time. Their findings concluded that for accurate fitting of polarizabilities and hyperpolarizabilities, one ramped cycle and one subsequent cycle for curve fitting are sufficient, providing accurate results compared to linear response theory, which assumes a monochromatic pulse that is adiabatically switched on by definition. Thus, in this paper, RT-CC3 calculations are carried out with $n_{r}=n_{p}=1$ as the default values. 
+
+\subsection{Simulating Rabi Oscillation from RT-CC Methods} \label{theory-cc3-3}
+When a molecule is excited by an oscillatory external field at resonance, it absorbs a photon and transitions to its first excited state. If the field remains active, instead of remaining in the excited state, the system emits a photon with the same frequency as the field when it interacts with another photon from the electromagnetic wave. This photon emission causes the system to de-excite back to the ground state. The probabilities of finding the molecule in the ground state ($P_{g}$) and excited state ($P_{e}$) oscillate between 0 and 1, satisfying the relation $P_{g}(t) + P_{e}(t) = 1$. This phenomenon, observed in a two-level quantum system, is known as Rabi oscillation.\cite{Rabi1937} Two commonly used models explain this behavior: the semi-classical Rabi model\cite{Gerry2005} and the quantum Rabi model, also known as the Jaynes-Cummings model.\cite{Shore1993} The latter assumes a quantized field and is often associated with quantum computing. It is important to note that the field strength should be sufficiently strong to excite a significant population to the target excited state. This approach may not be suitable for perturbation theory, which assumes the ground state's dominance. Given that real-time methods lack assumptions inherent to perturbation theory, they offer a feasible approach for simulating Rabi oscillations.
+
+\subsubsection{Semi-Classical Rabi Model} \label{theory-cc3-31}
+If we define the oscillatory external field as 
+\begin{equation}
+E(t) = \textbf{A}sin(\omega t),
+\label{eq:cc3-rabi-field}
+\end{equation}
+the Hamiltonian can be written as
+\begin{equation}
+\hat{H}(t) = \hat{H}_{0} - \hat{\mu} \cdot \textbf{A}sin(\omega t).
+\end{equation}
+The field vector $ \textbf{A}$ in Eq.~(\ref{eq:cc3-rabi-field}) is defined as $A_{0}\textbf{r}$, where $A_{0}$ is the field strength and $\textbf{r}$ is the unit vector that represents the direction of the field. The ground and excited states are labeled as $\ket{\Phi_{g}}$ and $\ket{\Phi_{e}}$ with the transition frequency between the two states being $\omega_{0} = (E_{e} - E_{g})/\hbar$. During the propagation in the time domain, the state vector at $t$ can be expressed as
+\begin{equation}
+\ket{\Phi(t)} = C_{g}(t)e^{-\frac{iE_{g}t}{\hbar}} + C_{e}(t)e^{-\frac{iE_{e}t}{\hbar}},
+\label{eq:cc3-rabi-state-vector}
+\end{equation}
+representing a superposition of the ground and excited states. The differential equations for the coefficient $C_{g}$ and $C_{e}$ can then be obtained by inserting Eq.~(\ref{eq:cc3-rabi-state-vector}) into TDSE as
+\begin{equation}
+\frac{dC_{g}(t)}{dt} = \frac{i}{2\hbar} \hat{\mu} \cdot  \textbf{A} e^{-i\Delta t} C_{e}(t)
+\end{equation}
+and
+\begin{equation}
+\frac{dC_{e}(t)}{dt} = \frac{i}{2\hbar} \hat{\mu} \cdot  \textbf{A} e^{i\Delta t} C_{g}(t),
+\end{equation}
+where $\Delta$ is the detuning of the transition frequency defined as $\Delta = \omega_{0} - \omega$. 
+Given the initial condition of $C_{g} =1$ and $C_{e} =0$, the solution can be derived as 
+\begin{equation}
+C_{g}(t) =  e^{\frac{i \Delta t}{2}}[cos(\frac{\Omega_{R}t}{2}) - i \frac{\Delta}{\Omega_{R}} sin(\frac{\Omega_{R}t}{2})]
+\end{equation}
+and
+\begin{equation}
+C_{e}(t) = -i\frac{-\hat{\mu} \cdot \textbf{A}}{\Omega_{R} \hbar} e^{\frac{i \Delta t}{2}} sin(\frac{\Omega_{R}t}{2}),
+\end{equation}
+where $\Omega_{R}$ is the Rabi frequency defined as
+\begin{equation}
+\Omega_{R} = [\Delta^{2} + (\hat{\mu} \cdot \textbf{A})^{2}]^{\frac{1}{2}}.
+\label{eq:cc3-rabi-freq}
+\end{equation}
+If the frequency of the field equals to the transition frequency between $\ket{\Phi_{g}}$ and $\ket{\Phi_{e}}$, and $\Delta=0$, $\Omega_{R}$ becomes
+\begin{equation}
+(\Omega_{R})_{\Delta=0} = \frac{|\hat{\mu} \cdot \textbf{r}|}{\hbar} A_{0}.
+\end{equation}
+It is proportional to the field strength. If $\Delta \neq 0$, the Rabi frequency will be larger than $(\Omega_{R})_{\Delta=0}$, as described by Eq.~(\ref{eq:cc3-rabi-freq}), the maximum probability of finding the molecule in the excited state $\ket{\Phi_{e}}$, denoted as $|C_{e}(t)|^{2}$, will be less than 1. 
+
+\subsubsection{Observing Rabi Cycles with RT-CC Simulations} \label{theory-cc3-32}
+In RT-CC methods, the time-dependent population of the molecule being in the ground or excited state, as defined in section~\ref{theory-cc3-32}, can also be represented using the time-dependent wave function parameters, the cluster amplitudes, to simulate the Rabi oscillation. As discussed in section~\ref{theory-cc3-11}, CC left- and right-hand wave functions are not identical. Rather than defining the state vector as shown in Eq.~(\ref{eq:cc3-rabi-state-vector}), we define the CC state vector as
+\begin{equation}
+\ket{S} \rangle = \frac{1}{\sqrt{2}} 
+\begin{pmatrix}
+\ket{\Phi_{L}} \\ \ket{\Phi_{R}}
+\end{pmatrix}.
+\end{equation}
+To quantify the energy level of the system at a certain time step, a quantum mechanical autocorrelation function defined as the overlap of two state vectors can be calculated. This concept was first introduced by Pedersen and Kvaal to extract time-dependent quantities about the stationary states from real-time simulations.\cite{Pedersen2019} The autocorrelation function of the state vectors at times $t_{1}$ and $t_{2}$ can be defined as
+\begin{equation}
+A(t_{1}, t_{2}) = \langle \bra{S(t_{1})} S(t_{2}) \rangle \rangle,
+\end{equation}
+where $\langle \bra{S(t_{1})} S(t_{2}) \rangle \rangle$ is the indefinite inner product with a general form of
+\begin{equation}
+\langle \bra{S_{1}} S_{2} \rangle \rangle = \frac{1}{2}(\bra{\Phi_{L_{1}}}\Phi_{R_{2}} \rangle + {\bra{\Phi_{L_{2}}}\Phi_{R_{1}} \rangle}^{*})
+\end{equation}
+for the CC wave function.
+If we expand the state vector in the basis of eigenvectors of the stationary Hamiltonian and parameterize the wave function with the $\hat{T}$ and $\hat{\Lambda}$ amplitudes, the autocorrelation function can be written as
+\begin{equation}
+A(t_{1}, t_{2}) = e^{iE_{0}(t_{1}-t_{2})}\{ 1+ i \sum_{\mu \ge 0}\lambda_{\mu}^{(0)} Im[t_{\mu}^{(1)}(t_{2}) - t_{\mu}^{(1)}(t_{1})]  \},
+\end{equation}
+where $E_{0}$ represents the ground state energy, and the superscripts of the cluster amplitudes indicate the perturbative orders with respect to the external field. To observe Rabi oscillation in a real-time simulation, we can choose $t_{1}=t_{0}=0$ and $t_{2}=t_{i}$ with $t_{i} > 0$. Assuming that the system starts in its ground state at the beginning of the simulation and an oscillatory electric field described by Eq.~(\ref{eq:cc3-rabi-field}) is applied starting from $t_{0}$, the autocorrelation function $A(t_{0}, t_{i})$ can provide information about the superposition of the ground and excited states at $t_{i}$ by evaluating the overlap between the ground state wave function and the wave function at $t_{i}$. The quantity $|A(t_{0}, t_{i})|^{2}$ is computed to represent the population of the ground state, with $|A(t_{0}, t_{i})|^{2}=1$ at $t=0$. If the frequency of the field is chosen to be the transition frequency between the ground state and the first excited state, a substantial population can be observed in the excited state, particularly with a sufficiently strong field strength. As a result, $|A(t_{0}, t_{i})|^{2}$ will exhibit oscillations within a range of approximately 0 to 1, with the oscillation frequency being the Rabi frequency associated with the field strength.                                                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             

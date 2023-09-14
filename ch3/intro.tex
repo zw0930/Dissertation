@@ -1,0 +1,130 @@
+\section{Introduction} \label{intro}
+
+Although quantum chemical models for the properties of stationary states have
+seen great advances over the last 60 years, both in terms of accuracy and
+computational efficiency, the non-equilibrium character of time-dependent
+Hamiltonians (e.g., in the presence of an external, oscillating
+electromagnetic field) requires approaches based on the time-dependent
+Schr\"odinger equation.\cite{McCullough1969, Kosloff1988, Li2020}
+While the most common techniques take a perturbational approach and treat
+spectroscopic responses in the frequency domain, thereby carefully avoiding
+the often-expensive time-propagation of the wave function, explicitly
+time-dependent methods have a number of important advantages over their
+perturbative counterparts. First, time-dependent methods allow straightforward
+connections to experimental conditions, such as fine-tuning the shape,
+duration, and intensity of the external fields.  Second, such methods yield
+spectroscopic properties across a wide range of frequencies via Fourier
+transformation of, e.g., the time-dependent electric-dipole moment, rather
+than a relatively narrow window of frequencies produced by response
+techniques.  Third, with careful propagation algorithms, time-dependent
+methods can permit simulation of more intense external fields than
+perturbation theory approaches.  Finally, the ample resources available from
+modern numerical mathematics and computer science may be brought to bear to
+improve the stability and efficiency of the time propagation itself.
+
+To exploit these advantages, a wide range of real-time methods have been
+explored over the last 30 years based on a variety of approximate solutions to
+the electronic Schr\"odinger equation, including Hartree-Fock
+(HF)\cite{Li2005}, density-functional theory (DFT),\cite{Repisky2015, Goings2018}
+configuration interaction (CI),\cite{Klamroth2003,Schlegel2007} and
+coupled-cluster (CC)\cite{Huber2011, Nascimento2017, Kristiansen2020}
+approaches.  Among these, real-time DFT (RT-DFT) is the most widely used for
+spectroscopic applications across a range of fields from biochemistry to solid
+state physics where the target systems are relatively large.\cite{Sanchez2010,
+Kolesov2016, Provorse2016, Bruner2016, Goings2016} The theory behind real-time
+methods is continuously under development, however, and the same shortcomings
+of systematic convergence and limited robustness that apply to ground-state
+density-functionals also apply to RT-DFT.  This motivates researchers to
+investigate higher-level methods.
+
+Real-time coupled cluster (RT-CC) methods, in particular, can achieve
+exceptionally high accuracy in many cases\cite{Bartlett2010,
+Crawford2000} and have been explored in the context of real-time
+simulations for some years.\cite{Huber2011, Pedersen2019, Kristiansen2020,
+Pedersen2020,
+Nascimento2016linear, Nascimento2017, Nascimento2019, Koulias2019, Vila2020,
+Park2019, Park2021, Cooper2021} However, RT-CC approaches also suffer from
+the same affliction as that of their time-independent counterparts,
+\textit{viz.}, high-degree polynomial scaling with the size of the molecular
+system.  For ground-state coupled cluster theory, techniques such as local
+correlation, \cite{Pulay1983, Hampel1996, Neese2009, Schutz2001,Yang2012,
+Russ2004, McAlexander2012, Crawford2019} fragmentation,\cite{Gordon2012,
+Epifanovsky2013, Li2004, Li2009} tensor decomposition,\cite{Kinoshita2003,
+Koch2003, Hohenstein2012, Schutski2017, Parrish2019, Pawlowski2019} and others
+have been developed to permit applications to larger molecular systems than
+conventional implementations allow.  However, while such methods are
+potentially transferable to the corresponding time-dependent approaches, they
+have yet to be exploited to reduce the computational cost of RT-CC.
+
+In addition to the development of more compact representations of the
+time-dependent wave function, the construction of the differential equations
+that represent the time-dependency of the relevant properties, as well as the
+choice of numerical integration algorithm can substantially affect the
+efficiency and/or the stability of the calculation.  For example, DePrince and
+Nascimento\cite{Nascimento2016,Nascimento2017} introduced left and right coupled
+cluster dipole functions within the equation-of-motion (EOM-CC) framework for
+calculating accurate linear absorption spectra across a wide frequency range.
+They demonstrated that propagating either the left- or right-hand dipole
+functions yielded the same result, thus reducing the computational cost by a
+factor of two compared to propagating both left- and right-hand coupled cluster
+wave functions. In 2016, Lopata\cite{Bruner2016} and coworkers accelerated
+RT-DFT calculations of broadband spectra by applying Pad{\'e} approximants to
+the Fourier transforms. Note that they gained a five times shorter simulation
+time by obtaining rapid convergence of spectra from Pad{\'e} approximants,
+while the technique has no dependence on the level of theory. In 2019, Pedersen and
+Kvaal\cite{Pedersen2019} reported symplectic integrators such as Gauss-Legendre
+can provide stable implementations across long propagation times even with
+relatively strong external fields. In subsequent work, Pedersen, Kvaal, and
+co-workers\cite{Kristiansen2020} used orbital-adaptive time-dependent coupled
+cluster doubles (OATDCCD) to improve the stability of their RT-CC
+implementation even when strong external fields result in a non-dominant
+electronic ground state. For the application to core
+excitation spectra, Bartlett and coworkers\cite{Park2019,Park2021}
+compared time-independent (TI) EOM-CC and time-dependent (TD) EOM-CC --- as
+well as contributions beyond the dipole approximation --- and concluded that
+TD-EOM-CC can provide accurate spectra for both core and valance spectra. In
+addition, in 2021, Li, DePrince, and co-workers\cite{Cooper2021} applied the short
+iterative Lanczos integration to the time-dependent (TD) EOM-CC method for a
+more efficient calculation of K-edge spectra. 
+
+In this paper, we consider alternative numerical approaches aimed at reducing
+the cost of RT-CC calculations.  In most quantum chemical programs,
+numerical parameters are typically computed and stored using binary
+representations translating to approximately 15 decimal digits of (double)
+precision.  However, pioneering studies by Yasuda,\cite{Yasuda2008} Martinez and
+co-workers,\cite{Ufimtsev2008,Ufimtsev2008quantum,Luehr2011} Aspuru-Guzik and
+co-workers,\cite{Vogt2008} DePrince and Hammond,\cite{DePrince2011} Asadchev and Gordon\cite{Asadchev2012}, and Krylov
+and co-workers\cite{Pokhilko2018} have demonstrated that single-precision
+arithmetic in which the binary representation supports ca.\ seven decimal
+digits, is sufficient --- and more cost effective --- for many applications.
+Based on the success of this previous work, we have explored the use of
+single-precision arithmetic in the context of RT-CC codes, particularly
+for the simulation of linear absorption.
+Additionally, we report a single-precision RT-CC implementation for which we
+obtain significant further speed-up utilizing the parallel architecture of
+graphical processing units (GPUs).
+
+Finally, we explore a range of numerical integrators for solving the RT-CC
+differential equations for time-dependent properties.  Generally, there are
+three main types of such integrators: explicit, adaptive (or embedded), and
+implicit.  Explicit integrators are so named because they take into account
+only the output of the previous time step when calculating the results of the
+current step, whereas adaptive integrators can adjust the step size at each
+iteration with specialized algorithms to control the local error. Finally,
+implicit integrators take in account the outputs of both the previous step and
+the current step when determining the results for the next step, an approach
+that is often more expensive due to the required iterative algorithm.
+The Runge-Kutta (RK) family of integrators\cite{Butcher1996} includes all
+three types and is commonly used for solving the initial value problem
+associated with the Schr\"odinger equations-of-motion.  We have built a library of RK
+integrators using all three types that are compatible with the RT-CC
+algorithm, and here we compare their performance.  Moreover, inspired by
+conventional adaptive integrators, we examine a mixed-step-size formalism to
+customize the propagation on the fly, depending on whether the external field
+is on or off.
+
+%A stable and trackable
+%time series of solutions is obtained for the cases with strong external fields
+%without adding significant computational cost. Details will be discussed in
+%the following sections.
+

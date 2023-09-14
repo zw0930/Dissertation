@@ -1,0 +1,19 @@
+\documentclass[journal=jctcce,manuscript=article]{achemso}
+\usepackage[utf8]{inputenc}
+\usepackage{chemformula}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+
+\title{Chapter4 Real-time coupled cluster method with approximate triples: the calculation of optical properties and electron dynamics}
+\author{Zhe Wang}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract}
+The formalism of real-time (RT) methods has been well-established during recent years. While various coupled cluster (CC) methods have been integrated with the RT framework, no inclusion beyond the double excitation has been discussed. In this article, we introduce an implementation of real-time coupled cluster singles, doubles and approximate triples (CC3) method to explore the potential of a high excitation level. The CC3 method is well-known for its advantages in calculating dynamic properties and combining with the response theory by treating singles as approximate orbital relaxation parameters and computing second-order triples iteratively.  It is a well-qualified candidate for handling the interaction between the system and the applied field, and therefore suitable for a RT implementation. Details about the derivation and implementation are first demonstrated following applications on calculating frequency-dependent properties including polarizabilities, first hyperpolarizabilities and the $G'$ tensor related to the optical rotation. Terms with triples are calculated and added upon the existing CCSD equations for the $\hat{T}$ and $\hat{\Lambda}$ amplitudes, also the one-electron density, giving the method a formally $N^{7}$ scaling. The Graphics Processing Unit (GPU) accelerated implementation is utilized to reduce the computational cost. It is been verified that the GPU implementation can speed up the calculation by up to a factor of 17 for water cluster test cases. Additionally, the single-precision arithmetic is used and compared to the conventional double-precision arithmetic. No significant difference is found in the polarizabilities and $G'$ tensor results, but a higher percentage error for the first hyperpolarizabilities is observed. Compared to the linear response (LR) CC3 results, the percentage errors of RT-CC3 polarizabilities and RT-CC3 first hyperpolarizabilities are under 0.1\% and 1\%, respectively for the \ch{H_{2}O}/cc-pVDZ test case. Furthermore, a discussion on the calculation of polarizabilities is included, which compares RT-CC3 with RT-CCSD and time-dependent nonorthogonal orbital-optimized coupled cluster doubles (TDNOCCD), in order to examine the performance of RT-CC3 using a group of ten-electron systems as test cases. In addition to the optical properties, we also investigate electron dynamics with our RT-CC formalism by simulating the Rabi oscillation and inducing excited state to excited state transitions. 
+
+\end{document}
