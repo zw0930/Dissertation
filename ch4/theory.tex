@@ -224,7 +224,7 @@ By equating the right-hand sides of Eqs.~(\ref{eq:cc3-prop1}) and~(\ref{eq:cc3-p
 where $E_{pq}$ is the unitary-group generator that can be expanded as $a_{p_{\alpha}}^{+}a_{q_{\alpha}} + a_{p_{\beta}}^{+}a_{q_{\beta}}$.
 
 \subsubsection{Implementation of RT-CC3 Method}  \label{theory-cc3-12}
-The hamiltonian perturbed by an external field is defined in Eq.~(\ref{eq:cc3-h-pert}). With the semi-classical dipole approximation, the time-dependent Hamiltonian can be written as
+The Hamiltonian perturbed by an external field is defined in Eq.~(\ref{eq:cc3-h-pert}). With the semi-classical dipole approximation, the time-dependent Hamiltonian can be written as
 \begin{equation}
 \hat{H}(t)= \hat{H}_{0} - \hat{\mu} \cdot \textbf{E}(t),
 \label{eq:cc3-H-efield}
@@ -241,7 +241,7 @@ and
 \end{equation}
 where $\tau_{\mu}$ is the excitation operator. It is important to note that the right-hand sides of the two equations are equivalent to the amplitude residuals in the ground state amplitude equations. Therefore, CC3 equations that include the external perturbation, as shown in section~\ref{theory-cc3-11}, can be inserted into the real-time equations straightforwardly. The additional terms that need to be evaluated at each time step beyond RT-CCSD can be found in Eqs.~(\ref{eq:cc3-x1}),~(\ref{eq:cc3-x2}),~(\ref{eq:cc3-y1}), and~(\ref{eq:cc3-y2}).   
 
-The spin-adapted expression in a closed-shell RHF formalism are shown here by inserting the form of $\hat{T}$  amplitudes in Eqs.~(\ref{eq:cc3-T1}), ~(\ref{eq:cc3-T2}) and~(\ref{eq:cc3-T3}) and the similar form for the $\hat{\Lambda}$ amplitudes into Eqs.~(\ref{eq:cc3-x1}),~(\ref{eq:cc3-x2}),~(\ref{eq:cc3-y1}) and~(\ref{eq:cc3-y2}). The terms in $X_{1}$, $X_{2}$, $Y_{1}$ and $Y_{2}$ become
+The spin-adapted expression in a closed-shell RHF formalism is shown here by inserting the form of $\hat{T}$  amplitudes in Eqs.~(\ref{eq:cc3-T1}), ~(\ref{eq:cc3-T2}) and~(\ref{eq:cc3-T3}) and the similar form for the $\hat{\Lambda}$ amplitudes into Eqs.~(\ref{eq:cc3-x1}),~(\ref{eq:cc3-x2}),~(\ref{eq:cc3-y1}) and~(\ref{eq:cc3-y2}). The terms in $X_{1}$, $X_{2}$, $Y_{1}$ and $Y_{2}$ become
 \begin{equation}
 X_{i}^{a}= \sum_{jkbc}(t_{ijk}^{abc}-t_{ijk}^{cba})L_{jkbc},
 \label{eq:cc3-x1-exp}

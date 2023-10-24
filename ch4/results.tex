@@ -1,7 +1,7 @@
 \captionsetup[subfigure]{font={small}, skip=1pt, margin=-0.1cm, singlelinecheck=false}
 \section{Results and Discussion} \label{results_cc3} 
 \subsection{Computational Cost of RT-CC3 Method} \label{results-cc3-1}
-CC3 methods scale at $N^{7}$, making them significantly more expensive compared to CCSD methods. In the implementation, techniques including factorization, reordering, and memory management need to be considered to improve efficiency, while the scaling remains unchanged. Taking the contribution from triples to the $\hat{\Lambda}_{1}$ equation shown in Eq.~(\ref{eq:cc3-y1-exp}) as an example, several adjustments can be made to accelerate the calculation. For contractions involving three tensors, an intermediate consisting of two tensors is calculated first to avoid a $NO^{4}NV^{4}$ contraction. The selection of the two tensors in the initial step may also affect efficiency. For instance, we can rewrite the third term in Eq.~(\ref{eq:cc3-y1-exp}) in two alternatives:
+CC3 methods scale at $N^{7}$, making them significantly more expensive compared to CCSD methods. In the implementation, techniques including factorization, reordering, and memory management need to be considered to improve efficiency, while the scaling remains unchanged. Taking the contribution from triples to the $\hat{\Lambda}_{1}$ equation shown in Eq.~(\ref{eq:cc3-y1-exp}) as an example, several adjustments can be made to accelerate the calculation. For contractions involving three tensors, an intermediate consisting of two tensors is calculated first to avoid a $NO^{4}NV^{4}$ contraction. The selection of the two tensors in the initial step may also affect efficiency. For instance, we can rewrite the third term in Eq.~(\ref{eq:cc3-y1-exp}) as two alternatives:
 \begin{equation}
 \sum\limits_{\substack{jkl\\bcd}}t_{jkl}^{bcd}L_{ij}^{ab}\lambda_{cd}^{kl} = \sum_{klcd}Z_{ikl}^{acd}\lambda_{cd}^{kl},
 \end{equation}
@@ -17,7 +17,7 @@ where
 \begin{equation}
 Z_{j}^{b} = \sum_{klcd}t_{jkl}^{bcd}\lambda_{cd}^{kl}.
 \end{equation}
-The former approach results in a scaling of $N^{6}$, whereas the intermediate approach requires a contraction that scales at $N^{8}$. The latter approach results in a scaling of $N^{4}$ with an intermediate contraction of $N^{6}$, making it the favorable way to calculate this specific term. For the second term in Eq.~(\ref{eq:cc3-y1-exp}), it can be rewritten as
+The former approach results in a scaling of $N^{6}$, whereas the intermediate approach requires a contraction that scales at $N^{8}$. The latter approach results in a scaling of $N^{4}$ with an intermediate contraction of $N^{6}$, making it the favorable way to calculate this specific term. The second term in Eq.~(\ref{eq:cc3-y1-exp}) can be rewritten as
 \begin{equation}
 \sum\limits_{\substack{jkl\\bcd}}t_{jkl}^{bcd}\bra{kl}ab \rangle \lambda_{cd}^{ij}=\sum_{jcd}Z_{j}^{acd}\lambda_{cd}^{ij},
 \label{eq:cc3-result-l1-term211}
@@ -43,7 +43,7 @@ Another computationally expensive step in the RT-CC3 method is the calculation o
 \end{equation}
 for a certain pair of virtual orbitals $a,b$. Reducing the number of loops over virtual orbitals accelerates the calculation of the one-electron density substantially. For the ground state calculation, the density needs to be calculated only once after the amplitudes converge from the iterations. Therefore, the effect of this adjustment may not seem to be prominent. However, it is particularly important in RT simulations when the density is calculated in every time step to obtain the corresponding time-dependent properties.
 
-In addition to the above, the permutational symmetry of the amplitudes shown in Eqs.~(\ref{eq:cc3-pijab}) and~(\ref{eq:cc3-pijkabc}), as well as the permutational symmetry of the integrals, are facilitated in both derivation and implementation. Identical terms that only differ in ordering need to be identified to avoid repeated calculation with a polynomial scaling. Regarding the triples, the amplitudes contracted with the same integral or other amplitudes should be reordered first. For instance, in Eq.~(\ref{eq:cc3-x1-exp}), $\hat{T}_{3}$ amplitudes contribute to $\hat{T}_{1}$ amplitudes by contracting with two-electron integrals. Two distinct triples are required in the contraction. Instead of calculating two $\hat{T}_{3}$ amplitudes individually, the amplitudes are reordered so that they share the same set of occupied orbitals. Given the known $t_{ijk}^{abc}$ with a fixed set of $i,j,k$, $t_{ijk}^{cba}$ can be obtained simply by swapping the first and third axis of the 3-index quantity. As noted by Paul et al. in Ref.~\citenum{Paul2020}, the computational time for reordering can be significant depending on the system size and the hardware used for the calculation. Nevertheless, the calculation of an additional triple amplitude is still much more expensive and thereby dominant in computational cost in our implementation. Additionally, it's worth mentioning that the permutational symmetry of the $T_{1}$-transformed integrals no longer has the same symmetry as the regular integrals. The only symmetry rule is that swapping pairs of indices does not change the integral, which is shown as
+In addition to the above, the permutational symmetry of the amplitudes shown in Eqs.~(\ref{eq:cc3-pijab}) and~(\ref{eq:cc3-pijkabc}), as well as the permutational symmetry of the integrals, are facilitated in both derivation and implementation. Identical terms that only differ in ordering need to be identified to avoid repeated calculation with a polynomial scaling. Regarding the triples, the amplitudes contracted with the same integral or other amplitudes should be reordered first. For instance, in Eq.~(\ref{eq:cc3-x1-exp}), $\hat{T}_{3}$ amplitudes contribute to $\hat{T}_{1}$ amplitudes by contracting with two-electron integrals. Two distinct triples are required in the contraction. Instead of calculating two $\hat{T}_{3}$ amplitudes individually, the amplitudes are reordered so that they share the same set of occupied orbitals. Given the known $t_{ijk}^{abc}$ with a fixed set of $i,j,k$, $t_{ijk}^{cba}$ can be obtained simply by swapping the first and third axes of the 3-index quantity. As noted by Paul et al. in Ref.~\citenum{Paul2020}, the computational time for reordering can be significant depending on the system size and the hardware used for the calculation. Nevertheless, the calculation of an additional triple amplitude is still much more expensive and thereby dominant in computational cost in our implementation. Additionally, it's worth mentioning that the permutational symmetry of the $T_{1}$-transformed integrals no longer has the same symmetry as the regular integrals. The only symmetry rule is that swapping pairs of indices does not change the integral, which is shown as
 \begin{equation}
 \tilde{\bra{pq}rs \rangle} = \tilde{\bra{qp}sr \rangle}.
 \end{equation}
@@ -273,7 +273,7 @@ In our test cases, TDNOCCD is initially compared to RT-CCSD by assessing its dif
 
 Next, TDNOCCD results are compared to LR-CC3 and RT-CC3. Except for a few cases (e.g., \ch{Ne} at $\omega=0.4\ au$ and $0.5\ au$, \ch{HF} at $\omega=0.3\ au$, \ch{NH_{3}} at $\omega=0.1\ au$, and \ch{CH_{4}} at $\omega=0.2\ au$), RT-CC3 results match LR-CC3. However, TDNOCCD deviates from LR-CC3/RT-CC3 by at least $1.03\%$ and up to $3.41\%$, with an average divergence of $2.14\%$. As these polarizability results are unaffected by proximity to resonances, the divergence stems from distinct treatments of orbital optimization and the inclusion/exclusion of triples.
 
-In cases where RT-CC3 exhibits significant percentage errors compared to LR-CC3, the difference between TDNOCCD and LR-CC3 may be larger or smaller than the difference between RT-CC3 and LR-CC3, depending on the RT-CC3 error. When RT-CC3 overestimates polarizability of \ch{Ne} ($\omega=0.4\ au$) and $\alpha_{zz}$ of \ch{HF} ($\omega=0.3\ au$) by $10.54\%$ and $8.13\%$, respectively, TDNOCCD yields smaller values due to orbital optimization, making it closer to LR-CC3. It ultimately underestimates these polarizability values by $2.71\%$ and $0.99\%$, respectively. Orbital optimization's effect mitigates the error and even leads to overcorrection in RT-CC3. However, when RT-CC3 underestimates polarizabilities, the even smaller values from TDNOCCD result in a larger difference from LR-CC3.
+In cases where RT-CC3 exhibits significant percentage errors compared to LR-CC3, the difference between TDNOCCD and LR-CC3 may be larger or smaller than the difference between RT-CC3 and LR-CC3, depending on the RT-CC3 error. When RT-CC3 overestimates polarizability of \ch{Ne} ($\omega=0.4\ au$) and $\alpha_{zz}$ of \ch{HF} ($\omega=0.3\ au$) by $10.54\%$ and $8.13\%$, respectively, TDNOCCD yields smaller values due to orbital optimization, making it closer to LR-CC3. It ultimately underestimates these polarizability values by $2.71\%$ and $0.99\%$, respectively. The orbital-optimization effect mitigates the error and even leads to overcorrection in RT-CC3. However, when RT-CC3 underestimates polarizabilities, the even smaller values from TDNOCCD result in a larger difference from LR-CC3.
 % Fig4: polyfit-polar
 \begin{figure}
      \centering
@@ -294,7 +294,7 @@ In cases where RT-CC3 exhibits significant percentage errors compared to LR-CC3,
 \centering
 \caption{Polarizabilities (in atomic units) of \ch{Ne}, \ch{HF}, \ch{H2O}, \ch{NH3} and \ch{CH4}.}
 \begin{tabular}{l l r r r r r r r r r}
-\hline 
+\hline
 \hline
 \ch{Ne}&$\omega\,(\text{a.u.})$ & $0.1$ & $0.2$ & $0.3$ & $0.4$ & $0.5$ \\
 \hline
@@ -340,7 +340,7 @@ In cases where RT-CC3 exhibits significant percentage errors compared to LR-CC3,
 &LR-CCSD   & $17.05$ & $17.39$ & $19.55$ \\ 
 &RT-CCSD   & $17.05$ & $17.39$ & $19.58$ \\
 &TDNOCCD  & $16.86$ & $17.19$ & $19.22$ \\
-\hline 
+\hline
 \hline
 \end{tabular}
 \label{tab:noccd}
@@ -443,7 +443,7 @@ As per Table~\ref{tab:g-ccsd}, no distinction is observed between single- and do
 
 \subsection{Electron dynamics}\label{results-cc3-3}
 
-In this section, we delve into the electron dynamics encompassing Rabi oscillations and the population of excited states within the RT-CC framework. We employ \ch{H_{2}}, \ch{LiH}, and \ch{C_{2}H_{4}} as our test cases. Our examination encompasses the effects of both the frequency and intensity of the external field. Furthermore, we investigate the stability and viability of the RT method, particularly in scenarios where the ground state is substantially depopulated. To validate our real-time implementation, we exclusively utilize the RT-CCSD method in double-precision. Employing a higher level of theory would be superfluous for the current objectives. Nevertheless, it's worth noting that the formalism employed for the RT-CCSD (dp) simulations can be seamlessly extended to RT-CC3 or single-precision calculations if necessitated.
+In this section, we delve into the electron dynamics including the Rabi oscillation and the population of excited states within the RT-CC framework. We employ \ch{H_{2}}, \ch{LiH}, and \ch{C_{2}H_{4}} as our test cases. Our examination involves the effects of both the frequency and intensity of the external field. Furthermore, we investigate the stability and viability of the RT method, particularly in scenarios where the ground state is substantially depopulated. To validate our real-time implementation, we exclusively utilize the RT-CCSD method in double-precision. Employing a higher level of theory would be superfluous for the current objectives. Nevertheless, it's worth noting that the formalism employed for the RT-CCSD (dp) simulations can be seamlessly extended to RT-CC3 or single-precision calculations if necessitated.
 
 \subsubsection{Rabi oscillation} \label{results-cc3-31}
 %% H2-rabi
